@@ -2,14 +2,14 @@
     import Expand from "$lib/Expand.svelte";
 
     export let style = "", hoverScale = false, hoverCursor = false, _fade = false;
-    export let blur = false, shadow = false, textCenter = false, background = '';
+    export let blur = false, shadow = false, textCenter = false, background = '', bindWidth = false;
     export let onClick = () => null;
 </script>
 
 <div class="box" class:hoverScale {style} on:click={onClick} style:cursor={hoverCursor ? 'cursor' : ''}
      style:box-shadow={shadow ? '0 10px 10px 0 rgba(0, 0, 0, 0.3)' : ''} style:text-align={textCenter ? 'center' : ''}>
     <div class="background" class:blur style:background={background}></div>
-    <Expand>
+    <Expand {bindWidth}>
         <slot/>
     </Expand>
 </div>
