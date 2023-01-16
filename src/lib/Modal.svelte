@@ -6,17 +6,15 @@
 </script>
 
 {#if showModal}
-    <div class="modal-background" on:click={() => showModal = false}>
-        <div transition:fade>
-            <Box center background="#ffffff" style="padding: 3.125rem;">
-                <slot/>
-            </Box>
-        </div>
+    <div class="modal" on:click={() => showModal = false} transition:fade>
+        <Box center background="#ffffff" style="padding: 3.125rem;">
+            <slot/>
+        </Box>
     </div>
 {/if}
 
 <style lang="scss">
-  .modal-background {
+  .modal {
     position: fixed;
     top: 0;
     left: 0;
