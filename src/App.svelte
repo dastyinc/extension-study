@@ -34,6 +34,14 @@
         getTodoList();
     })
 
+    onMount(() => ws(channel).conn(({message, uid, send}) => {
+        sendWs = send;
+        wsStore(message, 'TODO_UPDATE').subscribe((msg) => updateTodoList(msg.id));
+    }))
+    $: sendTodoListUpdate = throttle(() => {
+        sendWs?.({type: 'TODO_UPDATE'});
+    });
+
     async function getTodoList() {
         todos = await api(`/todoList/todo/${channel}`)
         todoList = todos.todos;
@@ -42,6 +50,7 @@
     async function deleteTodo(id) {
         await api(`/todoList/todo/${id}`, {}, 'DELETE')
         getTodoList();
+        sendTodoListUpdate()
     }
 
     async function alterChecked(_goal) {
@@ -54,10 +63,12 @@
         goal = "";
         completed = false;
         getTodoList();
+        sendTodoListUpdate()
     }
 
     function sendTodo() {
         api('/todoList/todo', {user_id, user_name, channel_id: channel, goal, completed}).then(() => {
+            sendTodoListUpdate()
         }).catch(({error}) => {
         })
         getTodoList();
@@ -68,6 +79,10 @@
         if (e.charCode === 13) {
             sendTodo();
         }
+    }
+
+    async function updateTodoList() {
+        await getTodoList()
     }
 </script>
 
