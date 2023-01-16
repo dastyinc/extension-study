@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25.071" height="25.071" viewBox="0 0 25.071 25.071">
+    <defs>
+        <filter id="zw0iwlvepa" x="0" y="0" width="25.071" height="25.071" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feFlood flood-opacity=".2"/>
+            <feComposite operator="in" in2="blur"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="smcas6xfob" x="0" y="0" width="25.071" height="25.071" filterUnits="userSpaceOnUse">
+            <feOffset dy="3"/>
+            <feGaussianBlur stdDeviation="3" result="blur-2"/>
+            <feFlood flood-opacity=".2"/>
+            <feComposite operator="in" in2="blur-2"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g data-name="Icon feather-plus">
+        <g style="filter:url(#zw0iwlvepa)" transform="matrix(1 0 0 1 -.001 -.003)">
+            <path data-name="패스 30" d="M18 7.5v8" transform="rotate(45 17.634 3.924)" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round"/>
+        </g>
+        <g style="filter:url(#smcas6xfob)" transform="matrix(1 0 0 1 -.001 -.003)">
+            <path data-name="패스 31" d="M7.5 18h8" transform="rotate(45 22.23 15.018)" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round"/>
+        </g>
+    </g>
+</svg>
