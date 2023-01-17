@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@dastyinc/kit-panel': ^0.0.8
+  '@dastyinc/kit-panel': ^0.0.10
   '@sveltejs/vite-plugin-svelte': ^2.0.2
   '@tsconfig/svelte': ^3.0.0
   d3-scale: ^4.0.2
@@ -17,7 +17,7 @@ dependencies:
   d3-scale: 4.0.2
 
 devDependencies:
-  '@dastyinc/kit-panel': 0.0.8
+  '@dastyinc/kit-panel': 0.0.10
   '@sveltejs/vite-plugin-svelte': 2.0.2_svelte@3.55.1+vite@4.0.4
   '@tsconfig/svelte': 3.0.0
   sass: 1.57.1
@@ -87,8 +87,8 @@ packages:
       w3c-keyname: 2.2.6
     dev: true
 
-  /@dastyinc/kit-panel/0.0.8:
-    resolution: {integrity: sha512-4mkmxChxFOZMYLPWCGmNTgDHetRSSUo5i7I8YD0UZL+WZenGnpi2/sGEX/j5iMo07CVAL2pk+IL4R/WWrBQyyA==, tarball: download/@dastyinc/kit-panel/0.0.8/d6053a2a67b087c71e9679231739850bf395255b}
+  /@dastyinc/kit-panel/0.0.10:
+    resolution: {integrity: sha512-8snBf9IuO0b2ivclDm3FZVQWFzg8JEbhKMDHyg2E+VirsCk18fXDLnphIhvGvpyDzNrvVR6D8p2wAKVoVUCwcg==, tarball: download/@dastyinc/kit-panel/0.0.10/4dabd973ff7d7a3d73c6f4cc9e5571d1bd8c37be}
     dependencies:
       nunui: 0.0.69
       reconnecting-websocket: 4.4.0
