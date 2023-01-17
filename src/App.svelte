@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Box, Modal} from '@dastyinc/kit-panel';
+    import {Box} from '@dastyinc/kit-panel';
     import {slide} from "svelte/transition";
     import {getContext, onMount} from "svelte";
 
@@ -9,6 +9,8 @@
     import uncheckedSrc from "$static/unchecked.svg?url";
     import closeSrc from "$static/close.svg?url";
     import plusSrc from "$static/plus.svg?url";
+    import Chart from '$lib/Chart.svelte';
+    import Modal from '$lib/Modal.svelte';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
@@ -21,6 +23,16 @@
     let goal = "", completed = false;
     let _completed = 0;
     let sendWs;
+
+    let weeklyStudy = [
+        {x : "0", y : "3"},
+        {x : "1", y : "4"},
+        {x : "2", y : "4"},
+        {x : "3", y : "5"},
+        {x : "4", y : "8"},
+        {x : "5", y : "3"},
+        {x : "6", y : "9"},
+    ]
 
     $: {
         todoList.forEach(todo => {
@@ -152,22 +164,46 @@
 
         <div style="display: flex;">
             <div style="margin-right: 3.125rem;">
-                <Box background="#f8f8f8" style="width: 24.813rem; height: 25.625rem;">
-                    <div style="color: black;">1</div>
+                <Box background="#f8f8f8" style="width: 24.813rem; height: 25.625rem; padding: 1.25rem">
+                    <div class="name" style="color: #ffffff;">Today</div>
                 </Box>
 
-                <Box background="#28222d" style="width: 24.813rem; height: 16.438rem; margin-top: 3.125rem;">
-                    <div style="color: black;">2</div>
+                <Box background="#28222d" style="width: 24.813rem; height: 16.438rem; margin-top: 3.125rem; padding: 1.25rem">
+                    <div class="name" style="background-color: white; color: #28222d">Weekly</div>
+                    <Chart data={weeklyStudy} style="margin-top: 1.25rem"/>
                 </Box>
             </div>
 
             <div>
-                <Box background="#28222d" style="width: 24.813rem; height: 21rem;">
-                    <div style="color: black;">3</div>
+                <Box background="#28222d" style="width: 24.813rem; height: 21rem; padding: 1.25rem">
+                    <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
+                    {#each todoList as goal}
+                        {#if !goal.completed}
+                            <div class="goal">
+                                <img src={goal.completed ? checkedSrc : uncheckedSrc}
+                                     on:click={goal.completed ? null : alterChecked(goal)}/>
+                                <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
+                                <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                            </div>
+                        {/if}
+                    {/each}
+                    {#each todoListCompleted as goal}
+                        <div class="goal">
+                            <img src={goal.completed ? checkedSrc : uncheckedSrc}
+                                 on:click={goal.completed ? null : alterChecked(goal)}/>
+                            <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
+                            <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                        </div>
+                    {/each}
+                    <div style="display: flex; margin-top: 0.625rem">
+                        <img src={plusSrc}/>
+                        <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;"
+                               placeholder="새로운 목표를 세워보세요!"/>
+                    </div>
                 </Box>
 
-                <Box background="#f8f8f8" style="width: 24.813rem; height: 21rem; margin-top: 3.125rem;">
-                    <div style="color: black;">4</div>
+                <Box background="#f8f8f8" style="width: 24.813rem; height: 21rem; margin-top: 3.125rem; padding: 1.25rem">
+                    <div class="name" style="color: #ffffff;">Ranking</div>
                 </Box>
             </div>
         </div>
