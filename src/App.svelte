@@ -9,6 +9,7 @@
     import uncheckedSrc from "$static/unchecked.svg?url";
     import closeSrc from "$static/close.svg?url";
     import plusSrc from "$static/plus.svg?url";
+    import modalSrc from "$static/modal.png?url";
     import Chart from '$lib/Chart.svelte';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
@@ -102,7 +103,7 @@
 </div>
 
 <div style="float: right; margin-top: -2.4rem; margin-right: 0.444rem">
-    <img src={moreSrc} on:click={() => showStudyModal = !showStudyModal}/>
+    <img src={modalSrc} on:click={() => showStudyModal = !showStudyModal}/>
 </div>
 
 <Box background="#ffffff" style="margin-top: 1.219rem; padding: 0.938rem 1.25rem 0.812rem 1.25rem;">
@@ -128,20 +129,20 @@
                 {#each todoList as goal}
                     {#if !goal.completed}
                         <div class="goal">
-                            <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                                 on:click={goal.completed ? null : alterChecked(goal)}/>
+                            <img src={uncheckedSrc} on:click={alterChecked(goal)}/>
                             <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
                             <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
-                {#each todoListCompleted as goal}
-                    <div class="goal">
-                        <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                             on:click={goal.completed ? null : alterChecked(goal)}/>
-                        <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                        <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
-                    </div>
+                {#each todoList as goal}
+                    {#if goal.completed}
+                        <div class="goal">
+                            <img src={checkedSrc}/>
+                            <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
+                            <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                        </div>
+                    {/if}
                 {/each}
                 <div style="display: flex; margin-top: 0.625rem">
                     <img src={plusSrc}/>
