@@ -10,7 +10,7 @@
     import closeSrc from "$static/close.svg?url";
     import plusSrc from "$static/plus.svg?url";
 
-    const {api} = getContext('utils');
+    const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
     const channel = getContext('channel');
 
@@ -20,6 +20,7 @@
     let todos, todoList = [], todoListCompleted = [];
     let goal = "", completed = false;
     let _completed = 0;
+    let sendWs;
 
     $: {
         todoList.forEach(todo => {
