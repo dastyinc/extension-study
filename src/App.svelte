@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Box} from '@dastyinc/kit-panel';
+    import {Box, Modal} from '@dastyinc/kit-panel';
     import {slide} from "svelte/transition";
     import {getContext, onMount} from "svelte";
 
@@ -10,7 +10,6 @@
     import closeSrc from "$static/close.svg?url";
     import plusSrc from "$static/plus.svg?url";
     import Chart from '$lib/Chart.svelte';
-    import Modal from '$lib/Modal.svelte';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
