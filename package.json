@@ -20,5 +20,8 @@
     "tslib": "^2.4.1",
     "typescript": "^4.9.4",
     "vite": "^4.0.4"
+  },
+  "dependencies": {
+    "d3-scale": "^4.0.2"
   }
 }
