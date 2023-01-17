@@ -1,6 +1,5 @@
 <script lang="ts">
-    import Box from "$lib/Box.svelte";
-    import Modal from "$lib/Modal.svelte";
+    import {Box, Modal} from '@dastyinc/kit-panel';
     import {slide} from "svelte/transition";
     import {getContext, onMount} from "svelte";
 
@@ -75,8 +74,8 @@
     <div class="title">Study</div>
 </div>
 
-<div style="float: right; margin-top: -2.4rem; margin-right: 0.444rem"><img src={moreSrc}
-                                                                            on:click={() => showStudyModal = !showStudyModal}/>
+<div style="float: right; margin-top: -2.4rem; margin-right: 0.444rem">
+    <img src={moreSrc} on:click={() => showStudyModal = !showStudyModal}/>
 </div>
 
 <Box background="#ffffff" style="margin-top: 1.219rem; padding: 0.938rem 1.25rem 0.812rem 1.25rem;">
