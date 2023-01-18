@@ -11,7 +11,7 @@
     import plusSrc from "$static/plus.svg?url";
     import modalSrc from "$static/modal.png?url";
     import Chart from '$lib/Chart.svelte';
-  import Ranking from '$lib/Ranking.svelte';
+    import Ranking from '$lib/Ranking.svelte';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
@@ -57,7 +57,7 @@
     });
 
     async function getTodoList() {
-        todos = await api(`/todoList/todo/${channel}`)
+        todos = await api(`/todoList/todo/user/${user_id}`)
         todoList = todos.todos;
     }
 
