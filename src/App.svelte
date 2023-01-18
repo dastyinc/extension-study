@@ -3,7 +3,6 @@
     import {slide} from "svelte/transition";
     import {getContext, onMount} from "svelte";
 
-    import moreSrc from "$static/more.svg?url";
     import checkboxSrc from "$static/checkbox.svg?url";
     import checkedSrc from "$static/checked.svg?url";
     import uncheckedSrc from "$static/unchecked.svg?url";
@@ -12,6 +11,8 @@
     import modalSrc from "$static/modal.png?url";
     import Chart from '$lib/Chart.svelte';
     import Ranking from '$lib/Ranking.svelte';
+    import Timer from '$lib/Timer.svelte';
+  import TodoList from '$lib/TodoList.svelte';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
@@ -148,8 +149,7 @@
                 {/each}
                 <div style="display: flex; margin-top: 0.625rem">
                     <img src={plusSrc}/>
-                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;"
-                           placeholder="새로운 목표를 세워보세요!"/>
+                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;" placeholder="새로운 목표를 세워보세요!"/>
                 </div>
             </Box>
         </div>
@@ -167,6 +167,7 @@
         <div style="margin-right: 1.375rem;">
             <Box background="#f8f8f8" style="width: 18.813rem; height: 19.438rem; padding: 1.25rem">
                 <div class="name" style="color: #ffffff;">Today</div>
+                <Timer/>
             </Box>
 
             <Box background="#28222d" style="width: 18.813rem; height: 12.438rem; margin-top: 1.375rem; padding: 1.25rem">
@@ -178,30 +179,14 @@
         <div>
             <Box background="#28222d" style="width: 18.813rem; height: 15.938rem; padding: 1.25rem">
                 <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
-                <div class="container">
-                    {#each todoList as goal}
-                        {#if !goal.completed}
-                            <div class="goal">
-                                <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                                        on:click={goal.completed ? null : alterChecked(goal)}/>
-                                <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                                <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
-                            </div>
-                        {/if}
-                    {/each}
-                    {#each todoListCompleted as goal}
-                        <div class="goal">
-                            <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                                    on:click={goal.completed ? null : alterChecked(goal)}/>
-                            <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                            <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
-                        </div>
-                    {/each}
-                </div>
-                <div style="display: flex; margin-top: 0.625rem">
-                    <img src={plusSrc}/>
-                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem; width: 100%" placeholder="새로운 목표를 세워보세요!"/>
-                </div>
+                <TodoList 
+                    bind:todoList={todoList}
+                    bind:todoListCompleted={todoListCompleted}
+                    bind:goal={goal}
+                    AlterChecked={() => alterChecked}
+                    DeleteTodo={() => deleteTodo}
+                    OnKeyPress={() => onKeyPress}
+                />
             </Box>
 
             <Box background="#f8f8f8" style="width: 18.813rem; height: 15.938rem; margin-top: 1.375rem; padding: 1.25rem">
