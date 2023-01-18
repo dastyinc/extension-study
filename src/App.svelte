@@ -11,6 +11,7 @@
     import plusSrc from "$static/plus.svg?url";
     import modalSrc from "$static/modal.png?url";
     import Chart from '$lib/Chart.svelte';
+  import Ranking from '$lib/Ranking.svelte';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
@@ -35,6 +36,7 @@
     ]
 
     $: {
+        _completed = 0;
         todoList.forEach(todo => {
             if (todo.completed) {
                 _completed += 1;
@@ -154,34 +156,34 @@
     {/if}
 </Box>
 
-<Modal bind:showModal={showStudyModal}>
-    <div style="width: 70vw;min-width: 600px;">
-        <div style="display: flex;">
-            <div class="name-bold">{user_name}</div>
-            <div class="name-normal" style="line-height: 2.8rem">의</div>
+<Modal bind:showModal={showStudyModal} style="width: fit-content; height: fit-content; padding: 1.375rem 2.375rem 2.375rem 2.375rem">
+    <div style="display: flex;">
+        <div class="name-bold">{user_name}</div>
+        <div class="name-normal" style="line-height: 2.2rem">의</div>
+    </div>
+    <div class="name-normal" style="margin-bottom: 1.438rem;">Study Dashboard</div>
+    
+    <div style="display: flex;">
+        <div style="margin-right: 1.375rem;">
+            <Box background="#f8f8f8" style="width: 18.813rem; height: 19.438rem; padding: 1.25rem">
+                <div class="name" style="color: #ffffff;">Today</div>
+            </Box>
+
+            <Box background="#28222d" style="width: 18.813rem; height: 12.438rem; margin-top: 1.375rem; padding: 1.25rem">
+                <div class="name" style="background-color: white; color: #28222d">Weekly</div>
+                <Chart data={weeklyStudy} style="margin-top: 1.25rem; height: 9.2rem"/>
+            </Box>
         </div>
-        <div class="name-normal">Study Dashboard</div>
 
-        <div style="display: flex;">
-            <div style="margin-right: 3.125rem;">
-                <Box background="#f8f8f8" style="width: 24.813rem; height: 25.625rem; padding: 1.25rem">
-                    <div class="name" style="color: #ffffff;">Today</div>
-                </Box>
-
-                <Box background="#28222d" style="width: 24.813rem; height: 16.438rem; margin-top: 3.125rem; padding: 1.25rem">
-                    <div class="name" style="background-color: white; color: #28222d">Weekly</div>
-                    <Chart data={weeklyStudy} style="margin-top: 1.25rem"/>
-                </Box>
-            </div>
-
-            <div>
-                <Box background="#28222d" style="width: 24.813rem; height: 21rem; padding: 1.25rem">
-                    <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
+        <div>
+            <Box background="#28222d" style="width: 18.813rem; height: 15.938rem; padding: 1.25rem">
+                <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
+                <div class="container">
                     {#each todoList as goal}
                         {#if !goal.completed}
                             <div class="goal">
                                 <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                                     on:click={goal.completed ? null : alterChecked(goal)}/>
+                                        on:click={goal.completed ? null : alterChecked(goal)}/>
                                 <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
                                 <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                             </div>
@@ -190,27 +192,47 @@
                     {#each todoListCompleted as goal}
                         <div class="goal">
                             <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                                 on:click={goal.completed ? null : alterChecked(goal)}/>
+                                    on:click={goal.completed ? null : alterChecked(goal)}/>
                             <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
                             <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/each}
-                    <div style="display: flex; margin-top: 0.625rem">
-                        <img src={plusSrc}/>
-                        <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;"
-                               placeholder="새로운 목표를 세워보세요!"/>
-                    </div>
-                </Box>
+                </div>
+                <div style="display: flex; margin-top: 0.625rem">
+                    <img src={plusSrc}/>
+                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem; width: 100%" placeholder="새로운 목표를 세워보세요!"/>
+                </div>
+            </Box>
 
-                <Box background="#f8f8f8" style="width: 24.813rem; height: 21rem; margin-top: 3.125rem; padding: 1.25rem">
-                    <div class="name" style="color: #ffffff;">Ranking</div>
-                </Box>
-            </div>
+            <Box background="#f8f8f8" style="width: 18.813rem; height: 15.938rem; margin-top: 1.375rem; padding: 1.25rem">
+                <div class="name" style="color: #ffffff;">Ranking</div>
+                <Ranking/>
+            </Box>
         </div>
     </div>
 </Modal>
 
 <style lang="scss">
+    .name-bold{
+        color:#28222d;
+        font-family: NotoSansKR;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .name-normal{
+        color:#28222d;
+        font-family: NotoSansKR;
+        font-size: 1.125rem;
+        font-weight: normal;
+    }
+
+    .container{
+        margin-top: 0.4rem;
+        max-height: 12.5rem;
+        overflow-y: scroll;
+    }
+
   .title {
     margin: 0 16.813rem 0.594rem 0;
     font-size: 1.5rem;
