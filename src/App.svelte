@@ -21,7 +21,7 @@
     export let showTodo = false;
     export let showStudyModal = false;
 
-    let todos, todoList = [], todoListCompleted = [];
+    let todos, todoList = [];
     let goal = "", completed = false;
     let _completed = 0;
     let sendWs;
@@ -91,7 +91,7 @@
     }
 
     function onKeyPress(e) {
-        if (e.charCode === 13) {
+        if (e.charCode === 13 && goal !== "") {
             sendTodo();
         }
     }
@@ -132,18 +132,18 @@
                 {#each todoList as goal}
                     {#if !goal.completed}
                         <div class="goal">
-                            <img src={uncheckedSrc} on:click={alterChecked(goal)}/>
+                            <img class="img" src={uncheckedSrc} on:click={alterChecked(goal)}/>
                             <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                            <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                            <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
                 {#each todoList as goal}
                     {#if goal.completed}
                         <div class="goal">
-                            <img src={checkedSrc}/>
+                            <img class="img" src={checkedSrc}/>
                             <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                            <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                            <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
@@ -181,11 +181,10 @@
                 <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
                 <TodoList 
                     bind:todoList={todoList}
-                    bind:todoListCompleted={todoListCompleted}
                     bind:goal={goal}
-                    AlterChecked={() => alterChecked}
-                    DeleteTodo={() => deleteTodo}
-                    OnKeyPress={() => onKeyPress}
+                    AlterChecked={alterChecked}
+                    DeleteTodo={deleteTodo}
+                    OnKeyPress={onKeyPress}
                 />
             </Box>
 
@@ -294,5 +293,9 @@
   input::placeholder {
     color: white;
     opacity: 0.5;
+  }
+
+  .img:hover{
+    cursor: pointer;
   }
 </style>

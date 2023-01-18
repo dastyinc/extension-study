@@ -1,8 +1,8 @@
 <script lang="ts">
-    export let todoList = [], todoListCompleted = [], goal;
-    export let AlterChecked = () => null;
-    export let DeleteTodo = () => null;
-    export let OnKeyPress = () => null;
+    export let todoList = [], goal;
+    export let AlterChecked;
+    export let DeleteTodo;
+    export let OnKeyPress;
 
     import checkedSrc from "$static/checked.svg?url";
     import uncheckedSrc from "$static/unchecked.svg?url";
@@ -21,13 +21,14 @@
             </div>
         {/if}
     {/each}
-    {#each todoListCompleted as goal}
-        <div class="goal">
-            <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                    on:click={goal.completed ? null : AlterChecked(goal)}/>
-            <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-            <img class="close" src={closeSrc} on:click|stopPropagation={DeleteTodo(goal.todo_id)}/>
-        </div>
+    {#each todoList as goal}
+        {#if goal.completed}
+            <div class="goal">
+                <img src={checkedSrc}/>
+                <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
+                <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+            </div>
+        {/if}
     {/each}
 </div>
 
@@ -75,5 +76,9 @@
     input::placeholder {
         color: white;
         opacity: 0.5;
+    }
+    
+    img:hover{
+        cursor: pointer;
     }
 </style>
