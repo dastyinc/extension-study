@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="68" height="68" viewBox="0 0 68 68">
+    <defs>
+        <filter id="koiseezoza" x="0" y="0" width="68" height="68" filterUnits="userSpaceOnUse">
+            <feOffset dy="5"/>
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feFlood flood-opacity=".302"/>
+            <feComposite operator="in" in2="blur"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="av6oexe1ub" x="20" y="12" width="35" height="44" filterUnits="userSpaceOnUse">
+            <feOffset dy="5"/>
+            <feGaussianBlur stdDeviation="5" result="blur-2"/>
+            <feFlood flood-opacity=".302"/>
+            <feComposite operator="in" in2="blur-2"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="5qvgsb1i9c" x="14" y="12" width="34" height="44" filterUnits="userSpaceOnUse">
+            <feOffset dy="5"/>
+            <feGaussianBlur stdDeviation="5" result="blur-3"/>
+            <feFlood flood-opacity=".302"/>
+            <feComposite operator="in" in2="blur-3"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g style="filter:url(#koiseezoza)">
+        <circle data-name="타원 31" cx="19" cy="19" r="19" transform="translate(15 10)" style="fill:#28222d"/>
+    </g>
+    <g data-name="그룹 27">
+        <g style="filter:url(#av6oexe1ub)" transform="translate(.002 .002)">
+            <rect data-name="사각형 49" width="3" height="12" rx="1" transform="translate(36 23)" style="fill:#fff;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"/>
+        </g>
+        <g style="filter:url(#5qvgsb1i9c)" transform="translate(.002 .002)">
+            <rect data-name="사각형 50" width="2" height="12" rx="1" transform="translate(30 23)" style="fill:#fff;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"/>
+        </g>
+    </g>
+</svg>

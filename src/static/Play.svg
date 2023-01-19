@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="68" height="68" viewBox="0 0 68 68">
+    <defs>
+        <filter id="8y8tadmz5a" x="0" y="0" width="68" height="68" filterUnits="userSpaceOnUse">
+            <feOffset dy="5"/>
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feFlood flood-opacity=".302"/>
+            <feComposite operator="in" in2="blur"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="3vcz16k5kb" x="13.527" y="11.517" width="42.471" height="44.966" filterUnits="userSpaceOnUse">
+            <feOffset dy="5"/>
+            <feGaussianBlur stdDeviation="5" result="blur-2"/>
+            <feFlood flood-opacity=".302"/>
+            <feComposite operator="in" in2="blur-2"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g data-name="그룹 32">
+        <g style="filter:url(#8y8tadmz5a)">
+            <circle data-name="타원 31" cx="19" cy="19" r="19" transform="translate(15 10)" style="fill:#28222d"/>
+        </g>
+        <g style="filter:url(#3vcz16k5kb)">
+            <path data-name="패스 41" d="M84.169 38.962 72.951 32.1a.623.623 0 0 0-.951.53v13.72a.623.623 0 0 0 .951.53l11.218-6.86a.616.616 0 0 0 0-1.06z" transform="translate(-43.47 -10.49)" style="fill:#fff"/>
+        </g>
+    </g>
+</svg>

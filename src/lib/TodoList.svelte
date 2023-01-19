@@ -26,7 +26,7 @@
             <div class="goal">
                 <img src={checkedSrc}/>
                 <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                <img class="close" src={closeSrc} on:click|stopPropagation={DeleteTodo(goal.todo_id)}/>
             </div>
         {/if}
     {/each}

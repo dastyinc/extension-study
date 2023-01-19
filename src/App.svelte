@@ -12,7 +12,8 @@
     import Chart from '$lib/Chart.svelte';
     import Ranking from '$lib/Ranking.svelte';
     import Timer from '$lib/Timer.svelte';
-  import TodoList from '$lib/TodoList.svelte';
+    import TodoList from '$lib/TodoList.svelte';
+    import { tweened } from 'svelte/motion';
 
     const {api, ws, wsStore, throttle} = getContext('utils');
     const {user_id, user_name} = getContext('account');
@@ -25,6 +26,16 @@
     let goal = "", completed = false;
     let _completed = 0;
     let sendWs;
+    let time = 0;
+    let timer;
+    let play = false;
+    let intervalId;
+    let initalTime;
+    let timeId;
+
+    $: hours = Math.floor(time / 3600)
+    $: minutes = Math.floor(time / 60);
+    $: seconds = Math.floor(time - hours * 3600 - minutes * 60)
 
     let weeklyStudy = [
         {x : "0", y : "3"},
@@ -47,6 +58,8 @@
 
     onMount(() => {
         getTodoList();
+        setInitialTime();
+        getTime();
     })
 
     onMount(() => ws(channel).conn(({message, uid, send}) => {
@@ -90,6 +103,29 @@
         goal = "";
     }
 
+    async function setInitialTime(){
+        await api(`/timer/time`, { user_id, user_name, channel_id: channel, time}).then(() => {
+        }).catch(({error}) => {
+        })
+    }
+
+    async function getTime(){
+        timer = await api(`/timer/time/${user_id}`);
+        time = timer.time[0].time;
+    }
+
+    function startTimer(){
+        getTime();
+        clearInterval(intervalId);
+        intervalId = setInterval(() => {
+            if(play) time++;
+        }, 1000);
+    }
+
+    async function stopTimer(){
+        await api(`/timer/time/${timeId}`, {time}, 'PUT');
+    }
+
     function onKeyPress(e) {
         if (e.charCode === 13 && goal !== "") {
             sendTodo();
@@ -106,7 +142,7 @@
 </div>
 
 <div style="float: right; margin-top: -2.4rem; margin-right: 0.444rem">
-    <img src={modalSrc} on:click={() => showStudyModal = !showStudyModal}/>
+    <img src={modalSrc} class="expand" on:click={() => showStudyModal = !showStudyModal}/>
 </div>
 
 <Box background="#ffffff" style="margin-top: 1.219rem; padding: 0.938rem 1.25rem 0.812rem 1.25rem;">
@@ -116,12 +152,11 @@
             <div class="status" style="color: black; margin-top: 0.625rem">TOEFL 공부 중</div>
             <div style="display: flex; margin: 0.625rem 0 0.875rem 0">
                 <img src={checkboxSrc}/>
-                <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">{_completed}
-                    / {todoList.length}</div>
+                <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">{_completed} / {todoList.length}</div>
             </div>
         </div>
         <div class="circle">
-            <div class="circle-text">test</div>
+            <div class="circle-text">{hours} : {minutes}</div>
         </div>
     </div>
 
@@ -167,7 +202,14 @@
         <div style="margin-right: 1.375rem;">
             <Box background="#f8f8f8" style="width: 18.813rem; height: 19.438rem; padding: 1.25rem">
                 <div class="name" style="color: #ffffff;">Today</div>
-                <Timer/>
+                <Timer
+                    bind:hours={hours}
+                    bind:minutes={minutes}
+                    bind:seconds={seconds}
+                    bind:play={play}
+                    StartTimer = {startTimer}
+                    StopTimer = {stopTimer}
+                />
             </Box>
 
             <Box background="#28222d" style="width: 18.813rem; height: 12.438rem; margin-top: 1.375rem; padding: 1.25rem">
@@ -222,6 +264,10 @@
     font-size: 1.5rem;
     font-weight: 500;
     color: #dce6f2;
+  }
+
+  .expand:hover{
+    cursor: pointer;
   }
 
   .goal {
