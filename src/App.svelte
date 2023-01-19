@@ -27,11 +27,8 @@
     let _completed = 0;
     let sendWs;
     let time = 0;
-    let timer;
+    const _time = 0;
     let play = false;
-    let intervalId;
-    let initalTime;
-    let timeId;
 
     $: hours = Math.floor(time / 3600)
     $: minutes = Math.floor(time / 60);
@@ -58,8 +55,8 @@
 
     onMount(() => {
         getTodoList();
-        setInitialTime();
         getTime();
+        initTimeArr();
     })
 
     onMount(() => ws(channel).conn(({message, uid, send}) => {
@@ -103,29 +100,6 @@
         goal = "";
     }
 
-    async function setInitialTime(){
-        await api(`/timer/time`, { user_id, user_name, channel_id: channel, time}).then(() => {
-        }).catch(({error}) => {
-        })
-    }
-
-    async function getTime(){
-        timer = await api(`/timer/time/${user_id}`);
-        time = timer.time[0].time;
-    }
-
-    function startTimer(){
-        getTime();
-        clearInterval(intervalId);
-        intervalId = setInterval(() => {
-            if(play) time++;
-        }, 1000);
-    }
-
-    async function stopTimer(){
-        await api(`/timer/time/${timeId}`, {time}, 'PUT');
-    }
-
     function onKeyPress(e) {
         if (e.charCode === 13 && goal !== "") {
             sendTodo();
@@ -134,6 +108,38 @@
 
     async function updateTodoList() {
         await getTodoList()
+    }
+
+    let timeArr;
+    let timeObj;
+    let time_id;
+    let intervalId;
+
+    async function getTime(){
+        timeObj = await api(`/timer/time/${user_id}`);
+        timeArr = timeObj.time;
+    }
+
+    async function initTimeArr(){
+        if(timeArr?.length === 0){
+            await api(`/timer/time`, { user_id, user_name, channel_id: channel, time: _time });
+            console.log("put");
+        }
+    }
+
+    function startTimer(){
+        getTime();
+        time = timeArr[0].time;
+        time_id = timeArr[0].time_id;
+        clearInterval(intervalId);
+        intervalId = setInterval(() => {
+            if(play) time++;
+        }, 1000);
+    }
+
+    async function stopTimer(){
+        await api(`/timer/time/${time_id}`, 'DELETE');
+        await api(`/timer/time`, { user_id, user_name, channel_id: channel, time });
     }
 </script>
 
@@ -207,8 +213,8 @@
                     bind:minutes={minutes}
                     bind:seconds={seconds}
                     bind:play={play}
-                    StartTimer = {startTimer}
-                    StopTimer = {stopTimer}
+                    StartTimer={startTimer}
+                    StopTimer={stopTimer}
                 />
             </Box>
 
