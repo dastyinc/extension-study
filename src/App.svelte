@@ -148,7 +148,8 @@
 </div>
 
 <div style="float: right; margin-top: -2.4rem; margin-right: 0.444rem">
-    <img src={modalSrc} class="expand" on:click={() => showStudyModal = !showStudyModal}/>
+    <!-- <img src={modalSrc} class="expand" on:click={() => showStudyModal = !showStudyModal}/> -->
+    <img src={modalSrc} class="expand" on:click={() => alert("개발 중입니다")}/>
 </div>
 
 <Box background="#ffffff" style="margin-top: 1.219rem; padding: 0.938rem 1.25rem 0.812rem 1.25rem;">
