@@ -22,14 +22,13 @@
   export let showTodo = false;
   export let showStudyModal = false;
 
-  let hours, minutes, seconds;
+  let hours = 0, minutes = 0, seconds = 0;
   let todos,
     todoList = [];
   let goal = "",
     completed = false;
   let _completed = 0;
   let sendWs;
-  const _time = 0;
   let play = false;
 
   let weeklyStudy = [
