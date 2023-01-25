@@ -13,7 +13,6 @@
   import Ranking from "$lib/Ranking.svelte";
   import Timer from "$lib/Timer.svelte";
   import TodoList from "$lib/TodoList.svelte";
-  import { tweened } from "svelte/motion";
 
   const { api, ws, wsStore, throttle } = getContext("utils");
   const { user_id, user_name } = getContext("account");
@@ -22,7 +21,7 @@
   export let showTodo = false;
   export let showStudyModal = false;
 
-  let hours = 0, minutes = 0, seconds = 0;
+  let hours = "00", minutes = "00", seconds = 0;
   let todos,
     todoList = [];
   let goal = "",
@@ -30,6 +29,8 @@
   let _completed = 0;
   let sendWs;
   let play = false;
+  let status = "Studying...";
+  let showPlayPause = false;
 
   let weeklyStudy = [
     { x: "0", y: "3" },
@@ -121,6 +122,10 @@
   async function updateTodoList() {
     await getTodoList();
   }
+
+  function handleMouseUp(){
+    showPlayPause = true;
+  }
 </script>
 
 <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.5);">
@@ -133,7 +138,6 @@
     class="expand"
     on:click={() => (showStudyModal = !showStudyModal)}
   />
-  <!-- <img src={modalSrc} class="expand" on:click={() => alert("개발 중입니다")} /> -->
 </div>
 
 <Box
@@ -143,9 +147,7 @@
   <div style="display: flex; justify-content: space-between;">
     <div class="top-div" on:click={() => (showTodo = !showTodo)}>
       <div class="name" style="color: #ffffff;">Study</div>
-      <div class="status" style="color: black; margin-top: 0.625rem">
-        TOEFL 공부 중
-      </div>
+      <div class="status" style="color: black; margin-top: 0.625rem">{status}</div>
       <div style="display: flex; margin: 0.625rem 0 0.875rem 0">
         <img src={checkboxSrc} />
         <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">
@@ -153,7 +155,7 @@
         </div>
       </div>
     </div>
-    <div class="circle">
+    <div class="circle" on:mouseup={handleMouseUp}>
       <div class="circle-text">{hours} : {minutes}</div>
     </div>
   </div>
@@ -176,7 +178,7 @@
                 src={uncheckedSrc}
                 on:click={alterChecked(goal)}
               />
-              <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
+              <div on:click={() => status = goal.goal} class="text" style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
                 {goal.goal}
               </div>
               <img
@@ -235,7 +237,7 @@
         style="width: 18.813rem; height: 19.438rem; padding: 1.25rem"
       >
         <div class="name" style="color: #ffffff;">Today</div>
-        <Timer bind:hours bind:minutes bind:seconds bind:play />
+        <Timer bind:hours bind:minutes bind:seconds bind:play bind:status/>
       </Box>
 
       <Box
@@ -260,6 +262,7 @@
         <TodoList
           bind:todoList
           bind:goal
+          bind:status
           AlterChecked={alterChecked}
           DeleteTodo={deleteTodo}
           OnKeyPress={onKeyPress}
@@ -303,6 +306,10 @@
     font-size: 1.5rem;
     font-weight: 500;
     color: #dce6f2;
+  }
+
+  .text:hover{
+    cursor: pointer;
   }
 
   .expand:hover {
@@ -356,6 +363,7 @@
     margin: 3.125rem 0 0 3.125rem;
     transform: translate(-50%, -50%);
     color: #28222d;
+    width: 6rem;
     text-align: center;
     font-size: 1.5rem;
     font-weight: bold;
