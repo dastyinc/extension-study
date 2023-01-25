@@ -70,11 +70,14 @@
 </script>
 
 <div>
+  <div class="name">수학의 정석 5단원 연습문제 풀기</div>
+    <div style="height:7.687rem;"> </div>
   <img src={play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}} />
-  <div class="time">{hours}</div>
+  <div class="time">{hours}::</div>
   <div class="time">{minutes}</div>
   <div class="time">{seconds}</div>
 </div>
+
 
 <style lang="scss">
   .time {
@@ -83,5 +86,21 @@
 
   img:hover {
     cursor: pointer;
+  }
+
+  .name {
+    width: 15.938rem;
+  height: 4.375rem;
+  margin: 0.5rem 0 4.063rem 0.5rem;
+  object-fit: contain;
+  font-family: NotoSansKR;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #28222d;
   }
 </style>
