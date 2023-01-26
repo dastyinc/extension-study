@@ -32,7 +32,6 @@
 	.time{
 		color: #28222d;
 		font-size: 1.438rem;
-		font-weight: bold;
 		font-family: NotoSansKR;
 		width: fit-content;
 		position: relative;

@@ -2,6 +2,7 @@
   import playSrc from "$static/Play.svg?url";
   import pauseSrc from "$static/pause.svg?url";
   import CircleProgressBar from "./CircleProgressBar.svelte";
+  import { getContext } from "svelte";
 
   export let play = false, hours, minutes, seconds, status;
   export let startTimer = () => {};
@@ -9,23 +10,24 @@
   export let stopTimer = () => {};
   export let resetTimer = () => {};
   export let time_id;
-  export let time = 0;
   let clicked = false;
-  
+
+  let time = getContext('time');
+
   $: {
-    hours = Math.floor(time / 3600);
+    hours = Math.floor($time / 3600);
     if(hours < 10){
       hours = "0" + hours;
     }
   }
   $: {
-    minutes = Math.floor(time / 60);
+    minutes = Math.floor($time / 60 - hours * 60 );
     if(minutes < 10){
       minutes = "0" + minutes;
     }
   }
   $: {
-    seconds = Math.floor(time - hours * 3600 - minutes * 60);
+    seconds = Math.floor($time - hours * 3600 - minutes * 60);
     if(seconds < 10){
       seconds = "0" + seconds;
     }
@@ -45,7 +47,7 @@
     <div class="button">
       <CircleProgressBar 
         bind:play
-        ratio={time / 86400} 
+        ratio={$time / 86400} 
         hours={hours} 
         minutes={minutes} 
         seconds={seconds}
