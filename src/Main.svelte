@@ -4,5 +4,5 @@
 </script>
 
 <Env>
-    <App/>
+    <App {...$$props}/>
 </Env>
