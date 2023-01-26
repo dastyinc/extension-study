@@ -22,9 +22,13 @@
   export let showTodo = false;
   export let showStudyModal = false;
 
-  let hours = "00", minutes = "00", seconds = 0;
-  let todos, todoList = [];
-  let goal = "", completed = false;
+  let hours = "00",
+    minutes = "00",
+    seconds = 0;
+  let todos,
+    todoList = [];
+  let goal = "",
+    completed = false;
   let _completed = 0;
   let sendWs;
   let play = false;
@@ -36,7 +40,7 @@
   let time_id;
   let intervalId;
 
-  $: console.log(time, timeArr)
+  $: console.log(time, timeArr);
 
   $: {
     _completed = 0;
@@ -49,7 +53,7 @@
 
   onMount(() => {
     getTodoList();
-    if(!play){
+    if (!play) {
       getTime();
       initTimeArr();
     }
@@ -93,7 +97,7 @@
     sendTodoListUpdate();
   }
 
-  async function _alterChecked(_goal){
+  async function _alterChecked(_goal) {
     deleteTodo(_goal.todo_id);
     api("/todoList/todo", {
       user_id,
@@ -134,7 +138,7 @@
     await getTodoList();
   }
 
-  function handleMouseUp(){
+  function handleMouseUp() {
     showPlayPause = true;
   }
 
@@ -171,9 +175,18 @@
     }
   }
 
-  async function resetTimer(){
+  async function resetTimer() {
+    await getTime();
+    time = timeArr[0].time;
+    time_id = timeArr[0].time_id;
     await api(`/timer/time/${time_id}`, {}, "DELETE");
-    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time: 0 });
+    await api(`/timer/time`, {
+      user_id,
+      user_name,
+      channel_id: channel,
+      time: 0,
+    });
+    await getTime();
   }
 </script>
 
@@ -196,7 +209,9 @@
   <div style="display: flex; justify-content: space-between;">
     <div class="top-div" on:click={() => (showTodo = !showTodo)}>
       <div class="name" style="color: #ffffff;">Study</div>
-      <div class="status" style="color: black; margin-top: 0.625rem">{status}</div>
+      <div class="status" style="color: black; margin-top: 0.625rem">
+        {status}
+      </div>
       <div style="display: flex; margin: 0.625rem 0 0.875rem 0">
         <img src={checkboxSrc} />
         <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">
@@ -227,7 +242,11 @@
                 src={uncheckedSrc}
                 on:click={alterChecked(goal)}
               />
-              <div on:click={() => status = goal.goal} class="text" style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
+              <div
+                on:click={() => (status = goal.goal)}
+                class="text"
+                style="margin-left: 0.625rem; width: 75%; font-size: 1rem;"
+              >
                 {goal.goal}
               </div>
               <img
@@ -241,7 +260,11 @@
         {#each todoList as goal}
           {#if goal.completed}
             <div class="goal">
-              <img class="img" src={checkedSrc} on:click={_alterChecked(goal)}/>
+              <img
+                class="img"
+                src={checkedSrc}
+                on:click={_alterChecked(goal)}
+              />
               <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
                 {goal.goal}
               </div>
@@ -278,15 +301,14 @@
   bind:time_id
   bind:todoList
   bind:goal
-
-  startTimer={startTimer}
-  stopTimer={stopTimer}
-  getTime={getTime}
-  resetTimer={resetTimer}
-  alterChecked={alterChecked}
-  _alterChecked={_alterChecked}
-  deleteTodo={deleteTodo}
-  onKeyPress={onKeyPress}
+  {startTimer}
+  {stopTimer}
+  {getTime}
+  {resetTimer}
+  {alterChecked}
+  {_alterChecked}
+  {deleteTodo}
+  {onKeyPress}
 />
 
 <style lang="scss">
@@ -303,7 +325,7 @@
     color: #dce6f2;
   }
 
-  .text:hover{
+  .text:hover {
     cursor: pointer;
   }
 
