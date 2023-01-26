@@ -2,6 +2,7 @@
   import playSrc from "$static/Play.svg?url";
   import pauseSrc from "$static/pause.svg?url";
   import { getContext, onDestroy, onMount } from "svelte";
+  import CircleProgressBar from "./CircleProgressBar.svelte";
 
   export let play = false, hours, minutes, seconds, status;
 
@@ -89,6 +90,7 @@
 <div>
   <div class="status">{status}</div>
   <div style="display: flex; justify-content: space-between">
+    <CircleProgressBar ratio={time / 100}/>
     <div class="button"><img src={!play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}} /></div>
     <div class="button"><div class="time">{hours}:{minutes}:{seconds}</div></div>
   </div>

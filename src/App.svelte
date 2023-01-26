@@ -79,20 +79,31 @@
   }
 
   async function alterChecked(_goal) {
-    goal = _goal.goal;
-    completed = true;
     deleteTodo(_goal.todo_id);
     api("/todoList/todo", {
       user_id,
       user_name,
       channel_id: channel,
-      goal,
-      completed,
+      goal: _goal.goal,
+      completed: true,
     })
       .then(() => {})
       .catch(({ error }) => {});
-    goal = "";
-    completed = false;
+    getTodoList();
+    sendTodoListUpdate();
+  }
+
+  async function _alterChecked(_goal){
+    deleteTodo(_goal.todo_id);
+    api("/todoList/todo", {
+      user_id,
+      user_name,
+      channel_id: channel,
+      goal: _goal.goal,
+      completed: false,
+    })
+      .then(() => {})
+      .catch(({ error }) => {});
     getTodoList();
     sendTodoListUpdate();
   }
@@ -192,7 +203,7 @@
         {#each todoList as goal}
           {#if goal.completed}
             <div class="goal">
-              <img class="img" src={checkedSrc} />
+              <img class="img" src={checkedSrc} on:click={_alterChecked(goal)}/>
               <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
                 {goal.goal}
               </div>
