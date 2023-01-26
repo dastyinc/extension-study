@@ -22,15 +22,18 @@
   export let showStudyModal = false;
 
   let hours = "00", minutes = "00", seconds = 0;
-  let todos,
-    todoList = [];
-  let goal = "",
-    completed = false;
+  let todos, todoList = [];
+  let goal = "", completed = false;
   let _completed = 0;
   let sendWs;
   let play = false;
   let status = "Studying...";
   let showPlayPause = false;
+  let time = 0;
+  let timeObj;
+  let timeArr = [];
+  let time_id;
+  let intervalId;
 
   let weeklyStudy = [
     { x: "0", y: "3" },
@@ -41,6 +44,8 @@
     { x: "5", y: "3" },
     { x: "6", y: "9" },
   ];
+
+  $: console.log(time)
 
   $: {
     _completed = 0;
@@ -53,6 +58,10 @@
 
   onMount(() => {
     getTodoList();
+    if(!play){
+      getTime();
+      initTimeArr();
+    }
   });
 
   onMount(() =>
@@ -136,6 +145,39 @@
 
   function handleMouseUp(){
     showPlayPause = true;
+  }
+
+  async function getTime() {
+    timeObj = await api(`/timer/time/${user_id}`);
+    timeArr = timeObj.time;
+    time = timeArr[0]?.time;
+  }
+
+  async function startTimer() {
+    await getTime();
+    time = timeArr[0].time;
+    time_id = timeArr[0].time_id;
+    clearInterval(intervalId);
+    intervalId = setInterval(() => {
+      if (play) time++;
+    }, 1000);
+  }
+
+  async function stopTimer() {
+    await api(`/timer/time/${time_id}`, {}, "DELETE");
+    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time });
+  }
+
+  async function initTimeArr() {
+    getTime();
+    if (timeArr.length === 0) {
+      await api(`/timer/time`, {
+        user_id,
+        user_name,
+        channel_id: channel,
+        time: 0,
+      });
+    }
   }
 </script>
 
@@ -248,7 +290,18 @@
         style="width: 18.813rem; height: 19.438rem; padding: 1.25rem"
       >
         <div class="name" style="color: #ffffff;">Today</div>
-        <Timer bind:hours bind:minutes bind:seconds bind:play bind:status/>
+        <Timer
+          bind:hours
+          bind:minutes 
+          bind:seconds 
+          bind:play 
+          bind:status 
+          bind:time 
+          bind:time_id
+          startTimer={startTimer}
+          stopTimer={stopTimer}
+          getTime={getTime}
+        />
       </Box>
 
       <Box
@@ -275,6 +328,7 @@
           bind:goal
           bind:status
           AlterChecked={alterChecked}
+          _AlterChecked={_alterChecked}
           DeleteTodo={deleteTodo}
           OnKeyPress={onKeyPress}
         />
