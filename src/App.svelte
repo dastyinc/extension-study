@@ -45,7 +45,7 @@
     { x: "6", y: "9" },
   ];
 
-  $: console.log(time)
+  $: console.log(time, timeArr)
 
   $: {
     _completed = 0;
@@ -169,7 +169,7 @@
   }
 
   async function initTimeArr() {
-    getTime();
+    await getTime();
     if (timeArr.length === 0) {
       await api(`/timer/time`, {
         user_id,
@@ -178,6 +178,11 @@
         time: 0,
       });
     }
+  }
+
+  async function resetTimer(){
+    await api(`/timer/time/${time_id}`, {}, "DELETE");
+    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time: 0 });
   }
 </script>
 
@@ -301,6 +306,7 @@
           startTimer={startTimer}
           stopTimer={stopTimer}
           getTime={getTime}
+          resetTimer={resetTimer}
         />
       </Box>
 

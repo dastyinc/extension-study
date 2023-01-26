@@ -3,7 +3,8 @@
 	export let hours;
 	export let minutes;
 	export let seconds;
-	export let ResetTimer = () => {};
+	export let resetTimer = () => {};
+	export let play;
 
 	$: angle = 360 * ratio;
 	$: background = `radial-gradient(white 50%, transparent 51%),
@@ -14,7 +15,9 @@
 
 <div class="circle" style={style}>
 	<div class="time">{hours}:{minutes}:{seconds}</div>
-	<div class="reset" on:click={ResetTimer}>Reset</div>
+	{#if !play}
+		<div class="reset" on:click={resetTimer}>Reset</div>
+	{/if}
 </div>
 
 <style lang="scss">
