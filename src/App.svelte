@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { getContext, onMount, setContext } from "svelte";
   import StudyModal from "$lib/StudyModal.svelte";
   import StudyPanel from "$lib/StudyPanel.svelte";
+  import { writable } from "svelte/store";
 
   const { api, ws, wsStore, throttle } = getContext("utils");
   const { user_id, user_name } = getContext("account");
@@ -17,14 +18,14 @@
   let play = false;
   let status = "Studying...";
   let showPlayPause = false;
-  let time = 0;
+  let time = writable(0);
   let timeObj;
   let timeArr = [];
   let time_id;
   let intervalId;
 
-  $: console.log(time, timeArr);
-
+  setContext('time', time);
+  
   $: {
     _completed = 0;
     todoList.forEach((todo) => {
@@ -128,22 +129,22 @@
   async function getTime() {
     timeObj = await api(`/timer/time/${user_id}`);
     timeArr = timeObj.time;
-    time = timeArr[0]?.time;
+    $time = timeArr[0]?.time;
   }
 
   async function startTimer() {
     await getTime();
-    time = timeArr[0].time;
+    $time = timeArr[0].time;
     time_id = timeArr[0].time_id;
     clearInterval(intervalId);
     intervalId = setInterval(() => {
-      if (play) time++;
+      if (play) $time++;
     }, 1000);
   }
 
   async function stopTimer() {
     await api(`/timer/time/${time_id}`, {}, "DELETE");
-    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time });
+    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time: $time });
   }
 
   async function initTimeArr() {
@@ -160,7 +161,7 @@
 
   async function resetTimer() {
     await getTime();
-    time = timeArr[0].time;
+    $time = timeArr[0].time;
     time_id = timeArr[0].time_id;
     await api(`/timer/time/${time_id}`, {}, "DELETE");
     await api(`/timer/time`, {
@@ -196,7 +197,6 @@
   bind:seconds
   bind:play
   bind:status
-  bind:time
   bind:time_id
   bind:todoList
   bind:goal

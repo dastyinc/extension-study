@@ -6,7 +6,7 @@
     import TodoList from "./TodoList.svelte";
     import Ranking from "./Ranking.svelte";
 
-    export let showStudyModal, hours, minutes, seconds, play, status, time, time_id;
+    export let showStudyModal, hours, minutes, seconds, play, status, time_id;
     export let todoList, goal;
     export let startTimer = () => {};
     export let stopTimer = () => {};
@@ -50,7 +50,6 @@
                     bind:seconds 
                     bind:play 
                     bind:status 
-                    bind:time 
                     bind:time_id
                     startTimer={startTimer}
                     stopTimer={stopTimer}

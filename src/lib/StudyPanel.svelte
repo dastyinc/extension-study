@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { getContext } from "svelte";
     import modalSrc from "$static/modal.png?url";
     import checkboxSrc from "$static/checkbox.svg?url";
     import checkedSrc from "$static/checked.svg?url";
@@ -8,11 +9,27 @@
     import { Box } from "@dastyinc/kit-panel";
     import { slide } from "svelte/transition";
 
-    export let showStudyModal, showTodo, status, _completed, todoList, hours, minutes, goal;
+    export let showStudyModal, showTodo, status, _completed, todoList, goal;
     export let alterChecked = () => {};
     export let _alterChecked = () => {};
     export let deleteTodo = () => {};
     export let onKeyPress = () => {};
+
+    let time = getContext('time');
+    let hours, minutes;
+
+    $: {
+      hours = Math.floor($time / 3600);
+      if(hours < 10){
+        hours = "0" + hours;
+      }
+    }
+    $: {
+      minutes = Math.floor($time / 60 - hours * 60);
+      if(minutes < 10){
+        minutes = "0" + minutes;
+      }
+    }
 </script>
 
 <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.5);">
@@ -119,7 +136,6 @@
     width: 6rem;
     text-align: center;
     font-size: 1.5rem;
-    font-weight: bold;
   }
 
   .goal {
