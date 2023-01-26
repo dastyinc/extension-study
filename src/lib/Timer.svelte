@@ -1,21 +1,15 @@
 <script lang="ts">
   import playSrc from "$static/Play.svg?url";
   import pauseSrc from "$static/pause.svg?url";
-  import { getContext, onDestroy, onMount } from "svelte";
+  import CircleProgressBar from "./CircleProgressBar.svelte";
 
   export let play = false, hours, minutes, seconds, status;
-
-  const { api } = getContext("utils");
-  const { user_id, user_name } = getContext("account");
-  const channel = getContext("channel");
-  
-  let timeArr = [];
-  let timeObj;
-  let time_id;
-  let intervalId;
-  let time = 0;
+  export let startTimer = () => {};
+  export let getTime = () => {};
+  export let stopTimer = () => {};
+  export let time_id;
+  export let time = 0;
   let clicked = false;
-  const _time = 0;
   
   $: {
     hours = Math.floor(time / 3600);
@@ -41,67 +35,17 @@
     } 
     else if(clicked) stopTimer();
   }
-  
-  onMount(() => {
-    getTime();
-    initTimeArr();
-  })
-
-  onDestroy(() => {
-    play = false;
-  })
-
-  async function getTime() {
-    timeObj = await api(`/timer/time/${user_id}`);
-    timeArr = timeObj.time;
-    time = timeArr[0]?.time;
-    console.log(timeArr)
-  }
-
-  async function initTimeArr() {
-    await getTime();
-    if (timeArr.length === 0) {
-      await api(`/timer/time`, {
-        user_id,
-        user_name,
-        channel_id: channel,
-        time: _time,
-      });
-    }
-  }
-
-  async function startTimer() {
-    await getTime();
-    time = timeArr[0].time;
-    time_id = timeArr[0].time_id;
-    clearInterval(intervalId);
-    intervalId = setInterval(() => {
-      if (play) time++;
-    }, 1000);
-  }
-
-  async function stopTimer() {
-    await api(`/timer/time/${time_id}`, {}, "DELETE");
-    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time });
-  }
 </script>
 
 <div>
   <div class="status">{status}</div>
   <div style="display: flex; justify-content: space-between">
     <div class="button"><img src={!play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}} /></div>
-    <div class="button"><div class="time">{hours}:{minutes}:{seconds}</div></div>
+    <div class="button"><CircleProgressBar ratio={time / 86400} hours={hours} minutes={minutes} seconds={seconds}/></div>
   </div>
 </div>
 
 <style lang="scss">
-  .time {
-    color: #28222d;
-    font-size: 1.438rem;
-    font-weight: bold;
-    font-family: NotoSansKR;
-  }
-
   .status{
     margin-top: 0.5rem;
     color: #28222d;

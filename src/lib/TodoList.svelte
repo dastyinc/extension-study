@@ -1,6 +1,7 @@
 <script lang="ts">
     export let todoList = [], goal, status;
     export let AlterChecked;
+    export let _AlterChecked;
     export let DeleteTodo;
     export let OnKeyPress;
 
@@ -14,8 +15,7 @@
     {#each todoList as goal}
         {#if !goal.completed}
             <div class="goal">
-                <img src={goal.completed ? checkedSrc : uncheckedSrc}
-                        on:click={goal.completed ? null : AlterChecked(goal)}/>
+                <img src={uncheckedSrc} on:click={AlterChecked(goal)}/>
                 <div on:click={() => status = goal.goal} class="text" style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
                 <img class="close" src={closeSrc} on:click|stopPropagation={DeleteTodo(goal.todo_id)}/>
             </div>
@@ -24,7 +24,7 @@
     {#each todoList as goal}
         {#if goal.completed}
             <div class="goal">
-                <img src={checkedSrc}/>
+                <img src={checkedSrc} on:click={_AlterChecked(goal)}/>
                 <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
                 <img class="close" src={closeSrc} on:click|stopPropagation={DeleteTodo(goal.todo_id)}/>
             </div>
