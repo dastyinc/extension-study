@@ -7,6 +7,7 @@
   export let startTimer = () => {};
   export let getTime = () => {};
   export let stopTimer = () => {};
+  export let resetTimer = () => {};
   export let time_id;
   export let time = 0;
   let clicked = false;
@@ -41,7 +42,16 @@
   <div class="status">{status}</div>
   <div style="display: flex; justify-content: space-between">
     <div class="button"><img src={!play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}} /></div>
-    <div class="button"><CircleProgressBar ratio={time / 86400} hours={hours} minutes={minutes} seconds={seconds}/></div>
+    <div class="button">
+      <CircleProgressBar 
+        bind:play
+        ratio={time / 86400} 
+        hours={hours} 
+        minutes={minutes} 
+        seconds={seconds}
+        resetTimer={resetTimer}
+      />
+    </div>
   </div>
 </div>
 
