@@ -1,34 +1,38 @@
 <script lang="ts">
-    import { getContext } from "svelte";
+    import {getContext} from "svelte";
     import modalSrc from "$static/modal.png?url";
     import checkboxSrc from "$static/checkbox.svg?url";
     import checkedSrc from "$static/checked.svg?url";
     import uncheckedSrc from "$static/unchecked.svg?url";
     import closeSrc from "$static/close.svg?url";
     import plusSrc from "$static/plus.svg?url";
-    import { Box } from "@dastyinc/kit-panel";
-    import { slide } from "svelte/transition";
+    import {Box} from "@dastyinc/kit-panel";
+    import {slide} from "svelte/transition";
 
     export let showStudyModal, showTodo, status, _completed, todoList, goal;
-    export let alterChecked = () => {};
-    export let _alterChecked = () => {};
-    export let deleteTodo = () => {};
-    export let onKeyPress = () => {};
+    export let alterChecked = () => {
+    };
+    export let _alterChecked = () => {
+    };
+    export let deleteTodo = () => {
+    };
+    export let onKeyPress = () => {
+    };
 
     let time = getContext('time');
     let hours, minutes;
 
     $: {
-      hours = Math.floor($time / 3600);
-      if(hours < 10){
-        hours = "0" + hours;
-      }
+        hours = Math.floor($time / 3600);
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
     }
     $: {
-      minutes = Math.floor($time / 60 - hours * 60);
-      if(minutes < 10){
-        minutes = "0" + minutes;
-      }
+        minutes = Math.floor($time / 60 - hours * 60);
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
     }
 </script>
 
@@ -46,8 +50,9 @@
             <div class="name" style="color: #ffffff;">Study</div>
             <div class="status" style="color: black; margin-top: 0.625rem">{status}</div>
             <div style="display: flex; margin: 0.625rem 0 0.875rem 0">
-            <img src={checkboxSrc}/>
-            <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">{_completed} / {todoList.length}</div>
+                <img src={checkboxSrc}/>
+                <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">{_completed}
+                    / {todoList.length}</div>
             </div>
         </div>
         <div class="circle">
@@ -57,16 +62,17 @@
 
     {#if showTodo}
         <div transition:slide>
-        <Box background="#28222d" shadow style="padding: 0.625rem; margin: 20px 0 0.438rem 0;">
-            <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
+            <Box background="#28222d" shadow style="padding: 0.625rem; margin: 20px 0 0.438rem 0;">
+                <div class="name" style="background-color: white; color: #28222d">Todo-List</div>
                 {#each todoList as goal}
                     {#if !goal.completed}
                         <div class="goal">
-                        <img class="img" src={uncheckedSrc} on:click={alterChecked(goal)}/>
-                        <div on:click={() => status = goal.goal} class="text" style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
-                            {goal.goal}
-                        </div>
-                        <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                            <img class="img" src={uncheckedSrc} on:click={alterChecked(goal)}/>
+                            <div on:click={() => status = goal.goal} class="text"
+                                 style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
+                                {goal.goal}
+                            </div>
+                            <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
@@ -74,22 +80,18 @@
                 {#each todoList as goal}
                     {#if goal.completed}
                         <div class="goal">
-                        <img class="img" src={checkedSrc} on:click={_alterChecked(goal)}/>
-                        <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                        <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
+                            <img class="img" src={checkedSrc} on:click={_alterChecked(goal)}/>
+                            <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
+                            <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
-            <div style="display: flex; margin-top: 0.625rem">
-            <img src={plusSrc} />
-            <input
-                bind:value={goal}
-                on:keypress={onKeyPress}
-                style="margin-left: 0.625rem;"
-                placeholder="새로운 목표를 세워보세요!"
-            />
-            </div>
-        </Box>
+                <div style="display: flex; margin-top: 0.625rem">
+                    <img src={plusSrc}/>
+                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;"
+                           placeholder="새로운 목표를 세워보세요!"/>
+                </div>
+            </Box>
         </div>
     {/if}
 </Box>
@@ -101,12 +103,15 @@
     font-weight: 500;
     color: #dce6f2;
   }
+
   .expand:hover {
     cursor: pointer;
   }
+
   .top-div:hover {
     cursor: pointer;
   }
+
   .name {
     display: inline-block;
     border-radius: 10px;
@@ -117,11 +122,13 @@
     padding: 0.1875rem 0.625rem 0.1875rem 0.625rem;
     line-height: 1.4rem;
   }
+
   .status {
     font-size: 1.25rem;
     font-weight: bold;
     color: #28222d;
   }
+
   .circle {
     width: 6.25rem;
     height: 6.25rem;
