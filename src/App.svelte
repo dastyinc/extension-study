@@ -23,7 +23,7 @@
   let time_id;
   let intervalId;
 
-  $: console.log(time, timeArr)
+  $: console.log(time, timeArr);
 
   $: {
     _completed = 0;
@@ -36,7 +36,7 @@
 
   onMount(() => {
     getTodoList();
-    if(!play){
+    if (!play) {
       getTime();
       initTimeArr();
     }
@@ -80,7 +80,7 @@
     sendTodoListUpdate();
   }
 
-  async function _alterChecked(_goal){
+  async function _alterChecked(_goal) {
     deleteTodo(_goal.todo_id);
     api("/todoList/todo", {
       user_id,
@@ -121,7 +121,7 @@
     await getTodoList();
   }
 
-  function handleMouseUp(){
+  function handleMouseUp() {
     showPlayPause = true;
   }
 
@@ -158,9 +158,18 @@
     }
   }
 
-  async function resetTimer(){
+  async function resetTimer() {
+    await getTime();
+    time = timeArr[0].time;
+    time_id = timeArr[0].time_id;
     await api(`/timer/time/${time_id}`, {}, "DELETE");
-    await api(`/timer/time`, { user_id, user_name, channel_id: channel, time: 0 });
+    await api(`/timer/time`, {
+      user_id,
+      user_name,
+      channel_id: channel,
+      time: 0,
+    });
+    await getTime();
   }
 </script>
 
