@@ -44,6 +44,7 @@
     onDestroy(() => {
         // play = false;
         stopTimer();
+        console.log("hello")
     })
 
     $: {
@@ -208,10 +209,12 @@
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            <div class="overhead-timer">
-                <img src={timeSrc} class="time-icon"/>
-                <div class="time-text">{hours}:{minutes}:{seconds}</div>
-            </div>
+            {#if user === user_id}
+                <div class="overhead-timer">
+                    <img src={timeSrc} class="time-icon"/>
+                    <div class="time-text">{hours}:{minutes}:{seconds}</div>
+                </div>
+            {/if}
         </Portal>
     {/if}
 {/each}
