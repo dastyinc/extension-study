@@ -1,9 +1,10 @@
 <script lang="ts">
-    import {getContext, onMount, setContext} from "svelte";
+    import {getContext, onDestroy, onMount, setContext} from "svelte";
     import StudyModal from "$lib/StudyModal.svelte";
     import StudyPanel from "$lib/StudyPanel.svelte";
     import Portal from "svelte-portal";
     import {writable} from "svelte/store";
+    import timeSrc from "$static/Play.svg?url";
 
     const {api, ws, wsStore, throttle} = getContext("utils");
     const {user_id, user_name} = getContext("account");
@@ -11,14 +12,14 @@
 
     let showTodo = false;
     let showStudyModal = false;
-    let hours = "00", minutes = "00", seconds = 0;
+    let clicked = false;
+    let hours, minutes, seconds;
     let todos, todoList = [];
     let goal = "", completed = false;
     let _completed = 0;
     let sendWs;
     let play = false;
     let status = "Studying...";
-    let showPlayPause = false;
     let time = writable(0);
     let timeObj;
     let timeArr = [];
@@ -40,6 +41,16 @@
         });
     });
 
+    onDestroy(() => {
+        // play = false;
+        stopTimer();
+    })
+
+    $: {
+        if (play && clicked) startTimer(); 
+        else if (clicked) stopTimer();
+    }
+
     $: {
         _completed = 0;
         todoList.forEach((todo) => {
@@ -52,6 +63,27 @@
     $: sendTodoListUpdate = throttle(() => {
         sendWs?.({type: "TODO_UPDATE"});
     });
+
+    $: {
+        hours = Math.floor($time / 3600);
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
+    }
+
+    $: {
+        minutes = Math.floor($time / 60 - hours * 60);
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+    }
+
+    $: {
+        seconds = Math.floor($time - hours * 3600 - minutes * 60);
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+    }
 
     async function getTodoList() {
         todos = await api(`/todoList/todo/user/${user_id}`);
@@ -125,10 +157,6 @@
         await getTodoList();
     }
 
-    function handleMouseUp() {
-        showPlayPause = true;
-    }
-
     async function getTime() {
         timeObj = await api(`/timer/time/${user_id}`);
         timeArr = timeObj.time;
@@ -180,7 +208,10 @@
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            Test tooltip from Study!
+            <div class="overhead-timer">
+                <img src={timeSrc} class="time-icon"/>
+                <div class="time-text">{hours}:{minutes}:{seconds}</div>
+            </div>
         </Portal>
     {/if}
 {/each}
@@ -189,7 +220,25 @@
             bind:hours bind:minutes bind:goal
             alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress}/>
 
-<StudyModal bind:showStudyModal bind:hours bind:minutes bind:seconds bind:play
-            bind:status bind:time_id bind:todoList bind:goal
+<StudyModal bind:showStudyModal bind:play
+            bind:status bind:time_id bind:todoList bind:goal bind:clicked
             startTimer={startTimer} stopTimer={stopTimer} getTime={getTime} resetTimer={resetTimer}
             alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress}/>
+
+<style lang="scss">
+    .overhead-timer{
+        display: flex;
+        padding: 0.125rem 0.938rem 0.313rem;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+    .time-icon{
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+    .time-text{
+        color: #241f28;
+        font-family: NotoSansKR;
+        font-size: 1.25rem;
+    }
+</style>

@@ -4,7 +4,8 @@
     import CircleProgressBar from "./CircleProgressBar.svelte";
     import {getContext} from "svelte";
 
-    export let play = false, hours, minutes, seconds, status;
+    export let play = false, status;
+    export let clicked = false;
     export let startTimer = () => {
     };
     export let getTime = () => {
@@ -14,7 +15,8 @@
     export let resetTimer = () => {
     };
     export let time_id;
-    let clicked = false;
+
+    let hours, minutes, seconds;
 
     let time = getContext('time');
 
@@ -38,10 +40,6 @@
             seconds = "0" + seconds;
         }
     }
-
-    $: if (play && clicked) {
-        startTimer();
-    } else if (clicked) stopTimer();
 
 </script>
 

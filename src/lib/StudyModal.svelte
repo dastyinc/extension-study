@@ -6,7 +6,7 @@
     import TodoList from "./TodoList.svelte";
     import Ranking from "./Ranking.svelte";
 
-    export let showStudyModal, hours, minutes, seconds, play, status, time_id;
+    export let showStudyModal, play, status, time_id, clicked;
     export let todoList, goal;
     export let startTimer = () => {
     };
@@ -53,7 +53,7 @@
         <div style="margin-right: 1.375rem;">
             <Box background="#f8f8f8" style="width: 18.813rem; height: 19.438rem; padding: 1.25rem">
                 <div class="name" style="color: #ffffff;">Today</div>
-                <Timer bind:hours bind:minutes bind:seconds bind:play bind:status bind:time_id
+                <Timer bind:play bind:status bind:time_id bind:clicked
                        startTimer={startTimer} stopTimer={stopTimer} getTime={getTime} resetTimer={resetTimer}/>
             </Box>
 
