@@ -4,7 +4,7 @@
     import StudyPanel from "$lib/StudyPanel.svelte";
     import Portal from "svelte-portal";
     import {writable} from "svelte/store";
-    import timeSrc from "$static/Play.svg?url";
+    import timeSrc from "$static/clock.svg?url";
 
     const {api, ws, wsStore, throttle} = getContext("utils");
     const {user_id, user_name} = getContext("account");
@@ -31,20 +31,15 @@
 
     onMount(() => {
         getTodoList();
-        if (!play) {
-            getTime();
-            initTimeArr();
-        }
+        // if (!play) {
+        //     getTime();
+        //     initTimeArr();
+        // }
         ws(channel).conn(({message, uid, send}) => {
             sendWs = send;
             wsStore(message, "TODO_UPDATE").subscribe((msg) => updateTodoList(msg.id));
         });
     });
-
-    // onDestroy(() => {
-    //     play = false;
-    //     stopTimer();
-    // })
 
     $: {
         if (play && clicked) startTimer(); 
@@ -157,39 +152,26 @@
         await getTodoList();
     }
 
+
+    let _time;
+    let _time_id;
+
     async function getTime() {
         timeObj = await api(`/timer/time/${user_id}`);
-        timeArr = timeObj.time;
-        $time = timeArr[0]?.time;
+        _time = timeObj.time;
+        _time_id = _time.time_id;
     }
 
     async function startTimer() {
         await getTime();
-        $time = timeArr[0].time;
-        time_id = timeArr[0].time_id;
-        clearInterval(intervalId);
-        intervalId = setInterval(() => {
-            if (play) $time++;
-        }, 1000);
+
     }
 
     async function stopTimer() {
         await api(`/timer/time/${time_id}`, {}, "DELETE");
         await api(`/timer/time`, {user_id, user_name, channel_id: channel, time: $time});
     }
-
-    async function initTimeArr() {
-        await getTime();
-        if (timeArr.length === 0) {
-            await api(`/timer/time`, {
-                user_id,
-                user_name,
-                channel_id: channel,
-                time: 0,
-            });
-        }
-    }
-
+    
     async function resetTimer() {
         await getTime();
         $time = timeArr[0].time;
@@ -204,17 +186,17 @@
         await getTime();
     }
 
-    let now;
-    let nowHour, nowMinutes, nowSeconds;
+    // let now;
+    // let nowHour, nowMinutes, nowSeconds;
 
-    setInterval(() => {
-        now = new Date();
-        nowHour = now.getHours();
-        nowMinutes = now.getMinutes();
-        nowSeconds = now.getSeconds();
-    }, 1000)
+    // setInterval(() => {
+    //     now = new Date();
+    //     nowHour = now.getHours();
+    //     nowMinutes = now.getMinutes();
+    //     nowSeconds = now.getSeconds();
+    // }, 1000)
 
-    $: console.log(nowHour,nowMinutes,nowSeconds)
+    // $: console.log(nowHour,nowMinutes,nowSeconds)
 </script>
 
 {#each Object.keys(users) as user}
