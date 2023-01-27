@@ -41,11 +41,10 @@
         });
     });
 
-    onDestroy(() => {
-        // play = false;
-        stopTimer();
-        console.log("hello")
-    })
+    // onDestroy(() => {
+    //     play = false;
+    //     stopTimer();
+    // })
 
     $: {
         if (play && clicked) startTimer(); 
@@ -204,17 +203,27 @@
         });
         await getTime();
     }
+
+    let now;
+    let nowHour, nowMinutes, nowSeconds;
+
+    setInterval(() => {
+        now = new Date();
+        nowHour = now.getHours();
+        nowMinutes = now.getMinutes();
+        nowSeconds = now.getSeconds();
+    }, 1000)
+
+    $: console.log(nowHour,nowMinutes,nowSeconds)
 </script>
 
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            {#if user === user_id}
-                <div class="overhead-timer">
-                    <img src={timeSrc} class="time-icon"/>
-                    <div class="time-text">{hours}:{minutes}:{seconds}</div>
-                </div>
-            {/if}
+            <div class="overhead-timer">
+                <img src={timeSrc} class="time-icon"/>
+                <div class="time-text">{hours}:{minutes}:{seconds}</div>
+            </div>
         </Portal>
     {/if}
 {/each}
