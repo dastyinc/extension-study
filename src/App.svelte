@@ -13,28 +13,36 @@
     let showTodo = false;
     let showStudyModal = false;
     let clicked = false;
-    let hours, minutes, seconds;
     let todos, todoList = [];
     let goal = "", completed = false;
     let _completed = 0;
     let sendWs;
     let play = false;
     let status = "Studying...";
-    let time = writable(0);
-    let timeObj;
-    let timeArr = [];
-    let time_id;
-    let intervalId;
+    let time, time_id, startTime, timeObj;
+    let nowHour, nowMinutes, nowSeconds, studyTime = writable(0);
+    
+    setContext('studyTime', $studyTime);
+
+    $: {
+        if(play){
+            $studyTime = time + nowHour*3600 + nowMinutes*60 + nowSeconds - startTime;
+        }
+    }
+
+    setInterval(() => {
+        let now = new Date();
+        nowHour = now.getHours();
+        nowMinutes = now.getMinutes();
+        nowSeconds = now.getSeconds();
+    }, 1000);
 
     export let users = {};
-    setContext('time', time);
 
     onMount(() => {
         getTodoList();
-        // if (!play) {
-        //     getTime();
-        //     initTimeArr();
-        // }
+        getTimer();
+        initTimer();
         ws(channel).conn(({message, uid, send}) => {
             sendWs = send;
             wsStore(message, "TODO_UPDATE").subscribe((msg) => updateTodoList(msg.id));
@@ -58,27 +66,6 @@
     $: sendTodoListUpdate = throttle(() => {
         sendWs?.({type: "TODO_UPDATE"});
     });
-
-    $: {
-        hours = Math.floor($time / 3600);
-        if (hours < 10) {
-            hours = "0" + hours;
-        }
-    }
-
-    $: {
-        minutes = Math.floor($time / 60 - hours * 60);
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-    }
-
-    $: {
-        seconds = Math.floor($time - hours * 3600 - minutes * 60);
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        }
-    }
 
     async function getTodoList() {
         todos = await api(`/todoList/todo/user/${user_id}`);
@@ -152,51 +139,28 @@
         await getTodoList();
     }
 
-
-    let _time;
-    let _time_id;
-
-    async function getTime() {
+    async function getTimer(){
         timeObj = await api(`/timer/time/${user_id}`);
-        _time = timeObj.time;
-        _time_id = _time.time_id;
+        time = timeObj.time[0].time;
+        time_id = timeObj.time[0].time_id;
     }
 
-    async function startTimer() {
-        await getTime();
-
+    async function initTimer(){
+        await getTimer();
+        if(timeObj.time.length === 0){
+            await api('/timer/time', { user_id, user_name, channel_id: channel, time: 0, startTime: 0 });
+        }
     }
 
-    async function stopTimer() {
-        await api(`/timer/time/${time_id}`, {}, "DELETE");
-        await api(`/timer/time`, {user_id, user_name, channel_id: channel, time: $time});
+    async function startTimer(){
+        await getTimer();
+        startTime = nowHour*3600 + nowMinutes*60 + nowSeconds;
+        await api(`/timer/time/${time_id}`, { time, startTime }, 'PUT');
     }
     
-    async function resetTimer() {
-        await getTime();
-        $time = timeArr[0].time;
-        time_id = timeArr[0].time_id;
-        await api(`/timer/time/${time_id}`, {}, "DELETE");
-        await api(`/timer/time`, {
-            user_id,
-            user_name,
-            channel_id: channel,
-            time: 0,
-        });
-        await getTime();
+    async function stopTimer(){
+        await api(`/timer/time/${time_id}`, { time: time + $studyTime, startTime }, 'PUT');
     }
-
-    // let now;
-    // let nowHour, nowMinutes, nowSeconds;
-
-    // setInterval(() => {
-    //     now = new Date();
-    //     nowHour = now.getHours();
-    //     nowMinutes = now.getMinutes();
-    //     nowSeconds = now.getSeconds();
-    // }, 1000)
-
-    // $: console.log(nowHour,nowMinutes,nowSeconds)
 </script>
 
 {#each Object.keys(users) as user}
@@ -204,19 +168,17 @@
         <Portal target={users[user].extensionRegion}>
             <div class="overhead-timer">
                 <img src={timeSrc} class="time-icon"/>
-                <div class="time-text">{hours}:{minutes}:{seconds}</div>
+                <div class="time-text"></div>
             </div>
         </Portal>
     {/if}
 {/each}
 
-<StudyPanel bind:showStudyModal bind:showTodo bind:status bind:_completed bind:todoList
-            bind:hours bind:minutes bind:goal
+<StudyPanel bind:showStudyModal bind:showTodo bind:status bind:_completed bind:todoList bind:goal
             alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress}/>
 
 <StudyModal bind:showStudyModal bind:play
             bind:status bind:time_id bind:todoList bind:goal bind:clicked
-            startTimer={startTimer} stopTimer={stopTimer} getTime={getTime} resetTimer={resetTimer}
             alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress}/>
 
 <style lang="scss">

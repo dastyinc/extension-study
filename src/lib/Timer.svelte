@@ -20,26 +20,26 @@
 
     let time = getContext('time');
 
-    $: {
-        hours = Math.floor($time / 3600);
-        if (hours < 10) {
-            hours = "0" + hours;
-        }
-    }
+    // $: {
+    //     hours = Math.floor($time / 3600);
+    //     if (hours < 10) {
+    //         hours = "0" + hours;
+    //     }
+    // }
 
-    $: {
-        minutes = Math.floor($time / 60 - hours * 60);
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-    }
+    // $: {
+    //     minutes = Math.floor($time / 60 - hours * 60);
+    //     if (minutes < 10) {
+    //         minutes = "0" + minutes;
+    //     }
+    // }
 
-    $: {
-        seconds = Math.floor($time - hours * 3600 - minutes * 60);
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        }
-    }
+    // $: {
+    //     seconds = Math.floor($time - hours * 3600 - minutes * 60);
+    //     if (seconds < 10) {
+    //         seconds = "0" + seconds;
+    //     }
+    // }
 
 </script>
 
@@ -50,8 +50,7 @@
             <img src={!play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}}/>
         </div>
         <div class="button">
-            <CircleProgressBar bind:play ratio={$time / 86400} hours={hours} minutes={minutes} seconds={seconds}
-                               resetTimer={resetTimer}/>
+            <!-- <CircleProgressBar bind:play ratio={$time / 86400} hours={hours} minutes={minutes} seconds={seconds} resetTimer={resetTimer}/> -->
         </div>
     </div>
 </div>
