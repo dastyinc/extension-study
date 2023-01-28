@@ -6,36 +6,29 @@
 
     export let play = false, status;
     export let clicked = false;
-    export let startTimer = () => {
-    };
-    export let getTime = () => {
-    };
-    export let stopTimer = () => {
-    };
     export let resetTimer = () => {
+        
     };
-    export let time_id;
-
     let hours, minutes, seconds;
 
-    let time = getContext('time');
+    let studyTime = getContext('studyTime');
 
     $: {
-        hours = Math.floor($time / 3600);
+        hours = Math.floor($studyTime / 3600);
         if (hours < 10) {
             hours = "0" + hours;
         }
     }
 
     $: {
-        minutes = Math.floor($time / 60 - hours * 60);
+        minutes = Math.floor($studyTime / 60 - hours * 60);
         if (minutes < 10) {
             minutes = "0" + minutes;
         }
     }
 
     $: {
-        seconds = Math.floor($time - hours * 3600 - minutes * 60);
+        seconds = Math.floor($studyTime - hours * 3600 - minutes * 60);
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
@@ -50,8 +43,7 @@
             <img src={!play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}}/>
         </div>
         <div class="button">
-            <CircleProgressBar bind:play ratio={$time / 86400} hours={hours} minutes={minutes} seconds={seconds}
-                               resetTimer={resetTimer}/>
+            <CircleProgressBar bind:play ratio={$studyTime / 86400} hours={hours} minutes={minutes} seconds={seconds} resetTimer={resetTimer}/>
         </div>
     </div>
 </div>

@@ -18,18 +18,20 @@
     };
     export let onKeyPress = () => {
     };
+    
+    let studyTime = getContext('studyTime');
 
-    let time = getContext('time');
     let hours, minutes;
 
     $: {
-        hours = Math.floor($time / 3600);
+        hours = Math.floor($studyTime / 3600);
         if (hours < 10) {
             hours = "0" + hours;
         }
     }
+
     $: {
-        minutes = Math.floor($time / 60 - hours * 60);
+        minutes = Math.floor($studyTime / 60 - hours * 60);
         if (minutes < 10) {
             minutes = "0" + minutes;
         }
@@ -56,7 +58,7 @@
             </div>
         </div>
         <div class="circle">
-            <div class="circle-text">{hours} : {minutes}</div>
+            <div class="circle-text">{hours}:{minutes}</div>
         </div>
     </div>
 

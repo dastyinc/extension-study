@@ -8,14 +8,6 @@
 
     export let showStudyModal, play, status, time_id, clicked;
     export let todoList, goal;
-    export let startTimer = () => {
-    };
-    export let stopTimer = () => {
-    };
-    export let getTime = () => {
-    };
-    export let resetTimer = () => {
-    };
     export let alterChecked = () => {
     };
     export let _alterChecked = () => {
@@ -24,6 +16,9 @@
     };
     export let onKeyPress = () => {
     };
+    export let resetTimer = () => {
+        
+    }
 
     const {user_name} = getContext("account");
 
@@ -53,8 +48,7 @@
         <div style="margin-right: 1.375rem;">
             <Box background="#f8f8f8" style="width: 18.813rem; height: 19.438rem; padding: 1.25rem">
                 <div class="name" style="color: #ffffff;">Today</div>
-                <Timer bind:play bind:status bind:time_id bind:clicked
-                       startTimer={startTimer} stopTimer={stopTimer} getTime={getTime} resetTimer={resetTimer}/>
+                <Timer bind:play bind:status bind:clicked resetTimer={resetTimer}/>
             </Box>
 
             <Box background="#28222d"
