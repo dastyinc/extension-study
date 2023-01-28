@@ -22,7 +22,7 @@
     let time, time_id, startTime, timeObj;
     let nowHour, nowMinutes, nowSeconds, studyTime = writable(0);
     
-    setContext('studyTime', $studyTime);
+    setContext('studyTime', studyTime);
 
     $: {
         if(play){
@@ -155,11 +155,16 @@
     async function startTimer(){
         await getTimer();
         startTime = nowHour*3600 + nowMinutes*60 + nowSeconds;
-        await api(`/timer/time/${time_id}`, { time, startTime }, 'PUT');
+        // await api(`/timer/time/${time_id}`, { time, startTime }, 'PUT');
     }
     
     async function stopTimer(){
-        await api(`/timer/time/${time_id}`, { time: time + $studyTime, startTime }, 'PUT');
+        // await api(`/timer/time/${time_id}`, { time: time + $studyTime, startTime }, 'PUT');
+    }
+
+    async function resetTimer(){
+        // await api(`/timer/time/${time_id}`, { time: 0, startTime }, 'PUT');
+        await getTimer();
     }
 </script>
 
@@ -179,7 +184,7 @@
 
 <StudyModal bind:showStudyModal bind:play
             bind:status bind:time_id bind:todoList bind:goal bind:clicked
-            alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress}/>
+            alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress} resetTimer={resetTimer}/>
 
 <style lang="scss">
     .overhead-timer{
