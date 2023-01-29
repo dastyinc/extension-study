@@ -155,7 +155,7 @@
     async function startTimer(){
         await getTimer();
         startTime = nowHour*3600 + nowMinutes*60 + nowSeconds;
-        // await api(`/timer/time/${time_id}`, { time, startTime }, 'PUT');
+        await api(`/timer/time/${time_id}`, { time, startTime }, 'PUT');
     }
     
     async function stopTimer(){

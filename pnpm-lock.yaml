@@ -93,7 +93,7 @@ packages:
     resolution: {integrity: sha512-g5CEEtfZAOwYWBoZ8qs7wt+rCbauloQ2gRC/oukv4mVKG2rZh0NoI/iCSV67OxhYPa0ixemvzt1qIIGsdLnADw==, tarball: download/@dastyinc/kit-panel/0.0.14/c3d822973b5c3dbc126c6a981b8c14c977972797}
     dependencies:
       '@dastyinc/mas101': 0.0.15
-      '@dastyinc/typed': 0.3.11
+      '@dastyinc/typed': 0.3.12
       bson: 4.7.2
       nunui: 0.0.70
       reconnecting-websocket: 4.4.0
@@ -104,8 +104,8 @@ packages:
     resolution: {integrity: sha512-m/Y5B2UIcvqyMSKwJh1wPGcQA4NFmrckW/9gOJMztZUY/pIwYAYmVGrqFcsU4El5qmhbDbGMn+AALoBccJf9Fw==, tarball: download/@dastyinc/mas101/0.0.15/cef3a2f6bc869ab97c6931ffed82ddeb11d08f11}
     dev: true
 
-  /@dastyinc/typed/0.3.11:
-    resolution: {integrity: sha512-58hGZB8WnJ7QxP0RFpHJW44GhQbgfE3Br68SuTPQCLCAkQEwOMjEm7Kq7ypIOwNrDv6tWdiWibMwEaDvqSz8kQ==, tarball: download/@dastyinc/typed/0.3.11/f2829fbda868d4d3a7f8827e8659f2f0c1b60c89}
+  /@dastyinc/typed/0.3.12:
+    resolution: {integrity: sha512-qHygtfnEW127gKnsZkyRs9lnHmy+PZHwP4PQg0v7hulCYq3MnoeRKdSxcGJqKzxZynPStJyJeKkIkkf4CD1Z0A==, tarball: download/@dastyinc/typed/0.3.12/ab3f40e0afd84289ce6cc1d2ed9ef19e3e89db12}
     dependencies:
       long: 5.2.1
       protobufjs: 7.1.2
