@@ -141,8 +141,8 @@
 
     async function getTimer(){
         timeObj = await api(`/timer/time/${user_id}`);
-        time = timeObj.time[0].time;
-        time_id = timeObj.time[0].time_id;
+        time = timeObj?.time[0].time;
+        time_id = timeObj?.time[0].time_id;
     }
 
     async function initTimer(){
