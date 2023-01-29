@@ -22,7 +22,6 @@
   let play = false;
   let status = "Studying...";
   let time, time_id, startTime, timeObj;
-  let timeObjById;
   let nowHour,
     nowMinutes,
     nowSeconds,
@@ -145,12 +144,10 @@
 
   async function getTimer() {
     timeObj = await api(`/timer/time/${user_id}`);
-    if (timeObj.time.length != 0) {
+    if (timeObj.time.length !== 0) {
       time = timeObj.time[0].time;
       time_id = timeObj.time[0].time_id;
-      console.log("There is time");
     }
-    console.log("There is no time");
   }
 
   async function initTimer() {
@@ -164,25 +161,23 @@
         startTime: 0,
       });
     }
+    $studyTime = time;
   }
 
   async function startTimer() {
     await getTimer();
     startTime = nowHour * 3600 + nowMinutes * 60 + nowSeconds;
-    console.log(time_id);
-    timeObjById = await api(`/timer/time/time_id/${time_id}`);
-    console.log(timeObjById);
+    await api(`/timer/time/edit`, { time_id, time, startTime }, "PUT");
   }
 
   async function stopTimer() {
     await getTimer();
-    time = timeObj.time[0].time;
-    time_id = timeObj.time[0].time_id;
-    await api("/timer/time/test/edit", { time_id, time, startTime }, "PUT");
+    await api(`/timer/time/edit`, { time_id, time: $studyTime, startTime }, "PUT");
   }
 
   async function resetTimer() {
-    // await api(`/timer/time/${time_id}`, { time: 0, startTime }, 'PUT');
+    $studyTime = 0;
+    await api(`/timer/time/edit`, { time_id, time: 0, startTime }, 'PUT');
     await getTimer();
   }
 </script>
