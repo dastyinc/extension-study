@@ -195,7 +195,7 @@
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            {#if user === user_id}
+            {#if user.toString() === user_id.toString()}
                 <div class="overhead-timer">
                     <img src={timeSrc} class="time-icon"/>
                     <div class="time-text"/>
