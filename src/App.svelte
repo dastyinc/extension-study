@@ -64,7 +64,7 @@
     }
 
     $: sendTodoListUpdate = throttle(() => {
-        sendWs?.({type: "TODO_UPDATE"});
+        sendWs?.("TODO_UPDATE");
     });
 
     async function getTodoList() {
