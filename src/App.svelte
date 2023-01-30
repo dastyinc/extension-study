@@ -13,20 +13,26 @@
     let showTodo = false;
     let showStudyModal = false;
     let clicked = false;
-    let todos, todoList = [];
-    let goal = "", completed = false;
+    let todos,
+        todoList = [];
+    let goal = "",
+        completed = false;
     let _completed = 0;
     let sendWs;
     let play = false;
     let status = "Studying...";
     let time, time_id, startTime, timeObj;
-    let nowHour, nowMinutes, nowSeconds, studyTime = writable(0);
-    
-    setContext('studyTime', studyTime);
+    let nowHour,
+        nowMinutes,
+        nowSeconds,
+        studyTime = writable(0);
+
+    setContext("studyTime", studyTime);
 
     $: {
-        if(play){
-            $studyTime = time + nowHour*3600 + nowMinutes*60 + nowSeconds - startTime;
+        if (play) {
+            $studyTime =
+                time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - startTime;
         }
     }
 
@@ -39,18 +45,24 @@
 
     export let users = {};
 
+    onDestroy(() => {
+        play = false;
+    });
+
     onMount(() => {
         getTodoList();
         getTimer();
         initTimer();
         ws(channel).conn(({message, uid, send}) => {
             sendWs = send;
-            wsStore(message, "TODO_UPDATE").subscribe((msg) => updateTodoList(msg.id));
+            wsStore(message, "TODO_UPDATE").subscribe((msg) =>
+                updateTodoList(msg.id)
+            );
         });
     });
 
     $: {
-        if (play && clicked) startTimer(); 
+        if (play && clicked) startTimer();
         else if (clicked) stopTimer();
     }
 
@@ -139,31 +151,43 @@
         await getTodoList();
     }
 
-    async function getTimer(){
+    async function getTimer() {
         timeObj = await api(`/timer/time/${user_id}`);
-        time = timeObj.time[0].time;
-        time_id = timeObj.time[0].time_id;
-    }
-
-    async function initTimer(){
-        await getTimer();
-        if(timeObj.time.length === 0){
-            await api('/timer/time', { user_id, user_name, channel_id: channel, time: 0, startTime: 0 });
+        if (timeObj.time.length !== 0) {
+            time = timeObj.time[0].time;
+            time_id = timeObj.time[0].time_id;
         }
     }
 
-    async function startTimer(){
+    async function initTimer() {
         await getTimer();
-        startTime = nowHour*3600 + nowMinutes*60 + nowSeconds;
-        // await api(`/timer/time/${time_id}`, { time, startTime }, 'PUT');
-    }
-    
-    async function stopTimer(){
-        // await api(`/timer/time/${time_id}`, { time: time + $studyTime, startTime }, 'PUT');
+        if (timeObj.time.length === 0) {
+            await api("/timer/time", {
+                user_id,
+                user_name,
+                channel_id: channel,
+                time: 0,
+                startTime: 0,
+                isPaused: play
+            });
+        }
+        $studyTime = time;
     }
 
-    async function resetTimer(){
-        // await api(`/timer/time/${time_id}`, { time: 0, startTime }, 'PUT');
+    async function startTimer() {
+        await getTimer();
+        startTime = nowHour * 3600 + nowMinutes * 60 + nowSeconds;
+        await api(`/timer/time/edit`, {time_id, time, startTime, isPaused: play}, "PUT");
+    }
+
+    async function stopTimer() {
+        await getTimer();
+        await api(`/timer/time/edit`, {time_id, time: $studyTime, startTime, isPaused: play}, "PUT");
+    }
+
+    async function resetTimer() {
+        $studyTime = 0;
+        await api(`/timer/time/edit`, {time_id, time: 0, startTime, isPaused: play}, 'PUT');
         await getTimer();
     }
 </script>
@@ -171,35 +195,60 @@
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            <div class="overhead-timer">
-                <img src={timeSrc} class="time-icon"/>
-                <div class="time-text"></div>
-            </div>
+            {#if user === user_id}
+                <div class="overhead-timer">
+                    <img src={timeSrc} class="time-icon"/>
+                    <div class="time-text"/>
+                </div>
+            {/if}
         </Portal>
     {/if}
 {/each}
 
-<StudyPanel bind:showStudyModal bind:showTodo bind:status bind:_completed bind:todoList bind:goal
-            alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress}/>
+<StudyPanel
+        bind:showStudyModal
+        bind:showTodo
+        bind:status
+        bind:_completed
+        bind:todoList
+        bind:goal
+        {alterChecked}
+        {_alterChecked}
+        {deleteTodo}
+        {onKeyPress}
+/>
 
-<StudyModal bind:showStudyModal bind:play
-            bind:status bind:time_id bind:todoList bind:goal bind:clicked
-            alterChecked={alterChecked} _alterChecked={_alterChecked} deleteTodo={deleteTodo} onKeyPress={onKeyPress} resetTimer={resetTimer}/>
+<StudyModal
+        bind:showStudyModal
+        bind:play
+        bind:status
+        bind:time_id
+        bind:todoList
+        bind:goal
+        bind:clicked
+        {alterChecked}
+        {_alterChecked}
+        {deleteTodo}
+        {onKeyPress}
+        {resetTimer}
+/>
 
 <style lang="scss">
-    .overhead-timer{
-        display: flex;
-        padding: 0.125rem 0.938rem 0.313rem;
-        border-radius: 10px;
-        background-color: rgba(255, 255, 255, 0.6);
-    }
-    .time-icon{
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-    .time-text{
-        color: #241f28;
-        font-family: NotoSansKR;
-        font-size: 1.25rem;
-    }
+  .overhead-timer {
+    display: flex;
+    padding: 0.125rem 0.938rem 0.313rem;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .time-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .time-text {
+    color: #241f28;
+    font-family: NotoSansKR;
+    font-size: 1.25rem;
+  }
 </style>

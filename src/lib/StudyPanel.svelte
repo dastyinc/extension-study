@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {getContext} from "svelte";
+    import {getContext, onDestroy} from "svelte";
     import modalSrc from "$static/modal.png?url";
     import checkboxSrc from "$static/checkbox.svg?url";
     import checkedSrc from "$static/checked.svg?url";
