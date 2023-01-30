@@ -45,6 +45,10 @@
 
   export let users = {};
 
+  onDestroy(() => {
+      play = false;
+  });
+
   onMount(() => {
     getTodoList();
     getTimer();
@@ -159,6 +163,7 @@
         channel_id: channel,
         time: 0,
         startTime: 0,
+        isPaused: play
       });
     }
     $studyTime = time;
@@ -167,17 +172,17 @@
   async function startTimer() {
     await getTimer();
     startTime = nowHour * 3600 + nowMinutes * 60 + nowSeconds;
-    await api(`/timer/time/edit`, { time_id, time, startTime }, "PUT");
+    await api(`/timer/time/edit`, { time_id, time, startTime, isPaused: play }, "PUT");
   }
 
   async function stopTimer() {
     await getTimer();
-    await api(`/timer/time/edit`, { time_id, time: $studyTime, startTime }, "PUT");
+    await api(`/timer/time/edit`, { time_id, time: $studyTime, startTime, isPaused: play }, "PUT");
   }
 
   async function resetTimer() {
     $studyTime = 0;
-    await api(`/timer/time/edit`, { time_id, time: 0, startTime }, 'PUT');
+    await api(`/timer/time/edit`, { time_id, time: 0, startTime, isPaused: play }, 'PUT');
     await getTimer();
   }
 </script>
@@ -185,10 +190,12 @@
 {#each Object.keys(users) as user}
   {#if users[user].extensionRegion}
     <Portal target={users[user].extensionRegion}>
-      <div class="overhead-timer">
-        <img src={timeSrc} class="time-icon" />
-        <div class="time-text" />
-      </div>
+      {#if user === user_id}
+        <div class="overhead-timer">
+          <img src={timeSrc} class="time-icon" />
+          <div class="time-text" />
+        </div>
+      {/if}
     </Portal>
   {/if}
 {/each}
