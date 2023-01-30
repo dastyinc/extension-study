@@ -26,6 +26,28 @@
         nowMinutes,
         nowSeconds,
         studyTime = writable(0);
+    let hours, minutes, seconds;
+    
+    $: {
+        hours = Math.floor($studyTime / 3600);
+        if (hours < 10) {
+            hours = "0" + hours;
+        }
+    }
+
+    $: {
+        minutes = Math.floor($studyTime / 60 - hours * 60);
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+    }
+
+    $: {
+        seconds = Math.floor($studyTime - hours * 3600 - minutes * 60);
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+    }
 
     setContext("studyTime", studyTime);
 
@@ -195,10 +217,10 @@
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            {#if user.toString() === user_id.toString()}
+            {#if user.toString() === user_id.toString() && play}
                 <div class="overhead-timer">
                     <img src={timeSrc} class="time-icon"/>
-                    <div class="time-text"/>
+                    <div class="time-text">{hours}:{minutes}:{seconds}</div>
                 </div>
             {/if}
         </Portal>
