@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@dastyinc/kit-panel': ^0.0.14
+  '@dastyinc/kit-panel': ^0.0.15
   '@sveltejs/vite-plugin-svelte': ^2.0.2
   '@tsconfig/svelte': ^3.0.0
   d3-scale: ^4.0.2
@@ -19,7 +19,7 @@ dependencies:
   svelte-portal: 2.2.0
 
 devDependencies:
-  '@dastyinc/kit-panel': 0.0.14
+  '@dastyinc/kit-panel': 0.0.15
   '@sveltejs/vite-plugin-svelte': 2.0.2_svelte@3.55.1+vite@4.0.4
   '@tsconfig/svelte': 3.0.0
   sass: 1.57.1
@@ -89,11 +89,11 @@ packages:
       w3c-keyname: 2.2.6
     dev: true
 
-  /@dastyinc/kit-panel/0.0.14:
-    resolution: {integrity: sha512-g5CEEtfZAOwYWBoZ8qs7wt+rCbauloQ2gRC/oukv4mVKG2rZh0NoI/iCSV67OxhYPa0ixemvzt1qIIGsdLnADw==, tarball: download/@dastyinc/kit-panel/0.0.14/c3d822973b5c3dbc126c6a981b8c14c977972797}
+  /@dastyinc/kit-panel/0.0.15:
+    resolution: {integrity: sha512-BIGL3T65snsUFlEyYyJrugyx7irDzocRv3Eg8gN9Z7D6ZUaG+UmFHlzbIIsL3FJk0b44yFqqFTMcDcduwGR/wQ==, tarball: download/@dastyinc/kit-panel/0.0.15/020d3a1cadef918e8d4a6c868a95ff9b733430dc}
     dependencies:
       '@dastyinc/mas101': 0.0.15
-      '@dastyinc/typed': 0.3.13
+      '@dastyinc/typed': 0.3.15
       bson: 4.7.2
       nunui: 0.0.70
       reconnecting-websocket: 4.4.0
@@ -104,8 +104,8 @@ packages:
     resolution: {integrity: sha512-m/Y5B2UIcvqyMSKwJh1wPGcQA4NFmrckW/9gOJMztZUY/pIwYAYmVGrqFcsU4El5qmhbDbGMn+AALoBccJf9Fw==, tarball: download/@dastyinc/mas101/0.0.15/cef3a2f6bc869ab97c6931ffed82ddeb11d08f11}
     dev: true
 
-  /@dastyinc/typed/0.3.13:
-    resolution: {integrity: sha512-b04DPREWgM1g1VvD02Qz3leiZ+yHhCvV6Xtndm8s5xJ1/m5XUeokceDCJSVgKkx31IM0B8LuvOCePh7n0zfaQQ==, tarball: download/@dastyinc/typed/0.3.13/fba70be527bec43433a7268688983a0d8dbb1a8c}
+  /@dastyinc/typed/0.3.15:
+    resolution: {integrity: sha512-IU8J62SvocbuWqxIsHZ59S7AS5m1V2LrfKej8irpqA5DxGGnW1hZLIob96r/qgy7TWzob1Mt+26PChdZ9o2sUg==, tarball: download/@dastyinc/typed/0.3.15/799f271998a852e7994a668a53078129e0cb158f}
     dependencies:
       long: 5.2.1
       protobufjs: 7.1.2

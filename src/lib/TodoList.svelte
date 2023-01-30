@@ -11,7 +11,7 @@
     export let OnKeyPress;
 </script>
 
-<div class="container">
+<div class="container --scroll">
     {#each todoList as goal}
         {#if !goal.completed}
             <div class="goal">
@@ -43,7 +43,7 @@
   .container {
     margin-top: 0.4rem;
     max-height: 12.5rem;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .text:hover {

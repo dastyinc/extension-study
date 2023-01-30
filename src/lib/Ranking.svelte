@@ -9,30 +9,20 @@
         {user: "swishee", time: 31442}
     ]
 
-    $:testRanking.sort(function (a, b) {
+    $: testRanking.sort((a, b) => {
         return b.time.toString().localeCompare(a.time.toString());
     })
 
-    String.prototype.toHHMMSS = function () {
-        let sec_num = parseInt(this, 10);
-        let hours = Math.floor(sec_num / 3600);
-        let minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-        let seconds = sec_num - (hours * 3600) - (minutes * 60);
+    function toHHMMSS(sec_num) {
+        let hours = Math.floor(sec_num / 3600).toString().padStart(2, '0');
+        let minutes = Math.floor((sec_num - (hours * 3600)) / 60).toString().padStart(2, '0');
+        let seconds = (sec_num - (hours * 3600) - (minutes * 60)).toString().padStart(2, '0');
 
-        if (hours < 10) {
-            hours = "0" + hours;
-        }
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        }
-        return hours + ':' + minutes + ':' + seconds;
+        return `${hours}:${minutes}:${seconds}`;
     }
 </script>
 
-<div class="container">
+<div class="container --scroll">
     {#each testRanking as value, i}
         <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
             <div style="display: flex;">
@@ -43,7 +33,7 @@
             </div>
             <div style="display: flex;">
                 <Poll max={testRanking[0].time} value={testRanking[i].time}/>
-                <div class="time">{value.time.toString().toHHMMSS()}</div>
+                <div class="time">{toHHMMSS(value.time.toString())}</div>
             </div>
         </div>
     {/each}
@@ -51,8 +41,8 @@
 
 <style lang="scss">
   .container {
-    height: 16rem;
-    overflow-y: scroll;
+    max-height: 15rem;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
