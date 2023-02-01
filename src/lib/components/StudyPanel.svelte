@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {getContext, onDestroy} from "svelte";
+    import {getContext} from "svelte";
     import modalSrc from "$static/modal.png?url";
     import checkboxSrc from "$static/checkbox.svg?url";
     import checkedSrc from "$static/checked.svg?url";
@@ -8,8 +8,10 @@
     import plusSrc from "$static/plus.svg?url";
     import {Box} from "@dastyinc/kit-panel";
     import {slide} from "svelte/transition";
+    import playSrc from "$static/start.svg?url";
+    import pauseSrc from "$static/stop.svg?url";
 
-    export let showStudyModal, showTodo, status, _completed, todoList, goal;
+    export let showStudyModal, showTodo, status, _completed, todoList, goal, play, clicked;
     export let alterChecked = () => {
     };
     export let _alterChecked = () => {
@@ -36,6 +38,16 @@
             minutes = "0" + minutes;
         }
     }
+
+    let showButton = false;
+
+    function handleMouseUp(){
+      showButton = true;
+    }
+    
+    function handleMouseLeave(){
+      showButton = false;
+    }
 </script>
 
 <div style="display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.5);">
@@ -53,12 +65,15 @@
             <div class="status" style="color: black; margin-top: 0.625rem">{status}</div>
             <div style="display: flex; margin: 0.625rem 0 0.875rem 0">
                 <img src={checkboxSrc}/>
-                <div style="color: black; line-height: 1.5rem; margin-left: 0.312rem">{_completed}
-                    / {todoList.length}</div>
+                <div style="color: black; display: flex; align-items: center; margin-left: 0.312rem">{_completed} / {todoList.length}</div>
             </div>
         </div>
-        <div class="circle">
+        <div class="circle" on:mouseenter={handleMouseUp} on:mouseleave={handleMouseLeave}>
+          {#if !showButton}
             <div class="circle-text">{hours}:{minutes}</div>
+          {:else}
+            <img class="button" src={!play ? playSrc : pauseSrc} on:click={() => {play = !play; clicked = true}}/>
+          {/if}
         </div>
     </div>
 
@@ -90,8 +105,7 @@
                 {/each}
                 <div style="display: flex; margin-top: 0.625rem">
                     <img src={plusSrc}/>
-                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;"
-                           placeholder="새로운 목표를 세워보세요!"/>
+                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;" placeholder="새로운 목표를 세워보세요!"/>
                 </div>
             </Box>
         </div>
@@ -129,6 +143,18 @@
     font-size: 1.25rem;
     font-weight: bold;
     color: #28222d;
+  }
+
+  .button{
+    position: relative;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: fit-content;
+  }
+
+  .button:hover {
+    cursor: pointer;
   }
 
   .circle {

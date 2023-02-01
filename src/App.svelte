@@ -1,10 +1,12 @@
 <script lang="ts">
-    import {getContext, onDestroy, onMount, setContext} from "svelte";
-    import StudyModal from "$lib/StudyModal.svelte";
-    import StudyPanel from "$lib/StudyPanel.svelte";
+    import {getContext, onMount, setContext} from "svelte";
+    import StudyModal from "$lib/components/StudyModal.svelte";
+    import StudyPanel from "$lib/components/StudyPanel.svelte";
     import Portal from "svelte-portal";
     import {writable} from "svelte/store";
     import timeSrc from "$static/clock.svg?url";
+
+    export let users = {};
 
     const {api, ws, wsStore, throttle} = getContext("utils");
     const {user_id, user_name} = getContext("account");
@@ -13,10 +15,8 @@
     let showTodo = false;
     let showStudyModal = false;
     let clicked = false;
-    let todos,
-        todoList = [];
-    let goal = "",
-        completed = false;
+    let todos, todoList = [];
+    let goal = "", completed = false;
     let _completed = 0;
     let sendWs;
     let play = false;
@@ -27,67 +27,37 @@
         nowSeconds,
         studyTime = writable(0);
     let hours, minutes, seconds;
-    
+        
+    setContext("studyTime", studyTime);
+
     $: {
         hours = Math.floor($studyTime / 3600);
         if (hours < 10) {
             hours = "0" + hours;
         }
     }
-
     $: {
         minutes = Math.floor($studyTime / 60 - hours * 60);
         if (minutes < 10) {
             minutes = "0" + minutes;
         }
     }
-
     $: {
         seconds = Math.floor($studyTime - hours * 3600 - minutes * 60);
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
     }
-
-    setContext("studyTime", studyTime);
-
     $: {
         if (play) {
             $studyTime =
                 time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - startTime;
         }
     }
-
-    setInterval(() => {
-        let now = new Date();
-        nowHour = now.getHours();
-        nowMinutes = now.getMinutes();
-        nowSeconds = now.getSeconds();
-    }, 1000);
-
-    export let users = {};
-
-    onDestroy(() => {
-        play = false;
-    });
-
-    onMount(() => {
-        getTodoList();
-        getTimer();
-        initTimer();
-        ws(channel).conn(({message, uid, send}) => {
-            sendWs = send;
-            wsStore(message, "TODO_UPDATE").subscribe((msg) =>
-                updateTodoList(msg.id)
-            );
-        });
-    });
-
     $: {
         if (play && clicked) startTimer();
         else if (clicked) stopTimer();
     }
-
     $: {
         _completed = 0;
         todoList.forEach((todo) => {
@@ -96,9 +66,27 @@
             }
         });
     }
-
     $: sendTodoListUpdate = throttle(() => {
         sendWs?.("TODO_UPDATE");
+    });
+
+    setInterval(() => {
+        let now = new Date();
+        nowHour = now.getHours();
+        nowMinutes = now.getMinutes();
+        nowSeconds = now.getSeconds();
+    }, 1000);
+
+    onMount(() => {
+        getTodoList();
+        getTimer();
+        initTimer();
+        ws(channel).conn(({message, uid, send}) => {
+            sendWs = send;
+            wsStore(message, "TODO_UPDATE").subscribe((msg) =>
+            updateTodoList(msg.id)
+            );
+        });
     });
 
     async function getTodoList() {
@@ -154,11 +142,11 @@
             goal,
             completed,
         })
-            .then(() => {
-                sendTodoListUpdate();
-            })
-            .catch(({error}) => {
-            });
+        .then(() => {
+            sendTodoListUpdate();
+        })
+        .catch(({error}) => {
+        });
         getTodoList();
         goal = "";
     }
@@ -212,6 +200,22 @@
         await api(`/timer/time/edit`, {time_id, time: 0, startTime, isPaused: play}, 'PUT');
         await getTimer();
     }
+
+    // let userStudyArr;
+
+    // $:{
+    //     Object.keys(users).forEach(userId => async function(){
+    //         let userStudyObj = await api(`/timer/time/${userId}`);
+    //         if (userStudyObj.time.length !== 0) {
+    //             userStudyArr.push({
+    //                 startTime : userStudyObj.time[0].startTime,
+    //                 time : userStudyObj.time[0].time,
+    //                 isPaused : userStudyObj.time[0].isPaused,
+    //             });
+    //         }
+    //         userStudyArr = userStudyArr;
+    //     });
+    // }
 </script>
 
 {#each Object.keys(users) as user}
@@ -234,6 +238,8 @@
         bind:_completed
         bind:todoList
         bind:goal
+        bind:play
+        bind:clicked
         {alterChecked}
         {_alterChecked}
         {deleteTodo}
@@ -258,19 +264,25 @@
 <style lang="scss">
   .overhead-timer {
     display: flex;
-    padding: 0.125rem 0.938rem 0.313rem;
+    padding: 0.375rem 0.938rem 0.375rem 0.938rem;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.6);
+    width: fit-content;
   }
 
   .time-icon {
     width: 1.5rem;
     height: 1.5rem;
+    display: flex;
+    align-items: center;
   }
 
   .time-text {
     color: #241f28;
     font-family: NotoSansKR;
     font-size: 1.25rem;
+    margin-left: 0.625rem;
+    display: flex;
+    align-items: center;
   }
 </style>
