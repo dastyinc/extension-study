@@ -178,7 +178,7 @@
                 channel_id: channel,
                 time: 0,
                 startTime: 0,
-                isPaused: play
+                isPaused: !play
             });
         }
         $studyTime = time;
@@ -187,44 +187,67 @@
     async function startTimer() {
         await getTimer();
         startTime = nowHour * 3600 + nowMinutes * 60 + nowSeconds;
-        await api(`/timer/time/edit`, {time_id, time, startTime, isPaused: play}, "PUT");
+        await api(`/timer/time/edit`, {time_id, time, startTime, isPaused: !play}, "PUT");
     }
 
     async function stopTimer() {
         await getTimer();
-        await api(`/timer/time/edit`, {time_id, time: $studyTime, startTime, isPaused: play}, "PUT");
+        await api(`/timer/time/edit`, {time_id, time: $studyTime, startTime, isPaused: !play}, "PUT");
     }
 
     async function resetTimer() {
         $studyTime = 0;
-        await api(`/timer/time/edit`, {time_id, time: 0, startTime, isPaused: play}, 'PUT');
+        await api(`/timer/time/edit`, {time_id, time: 0, startTime, isPaused: !play}, 'PUT');
         await getTimer();
     }
 
-    // let userStudyArr;
+    let userStudyDict = {};
 
-    // $:{
-    //     Object.keys(users).forEach(userId => async function(){
-    //         let userStudyObj = await api(`/timer/time/${userId}`);
-    //         if (userStudyObj.time.length !== 0) {
-    //             userStudyArr.push({
-    //                 startTime : userStudyObj.time[0].startTime,
-    //                 time : userStudyObj.time[0].time,
-    //                 isPaused : userStudyObj.time[0].isPaused,
-    //             });
-    //         }
-    //         userStudyArr = userStudyArr;
-    //     });
-    // }
+    $:{
+        Object.keys(users).forEach(userId => async function(){
+            let userStudyObj = await api(`/timer/time/${userId}`);
+            if (userStudyObj.time.length !== 0){
+                userStudyDict[userId] = {
+                    startTime : userStudyObj.time[0].startTime,
+                    time : userStudyObj.time[0].time,
+                    isPaused : userStudyObj.time[0].isPaused,
+                };
+            }
+        });
+    }
+
+    function calcStudyTime(_time, _startTime){
+        let _studyTime = _time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - _startTime;
+        let _hours = Math.floor(_studyTime / 3600);
+        if (_hours < 10) {
+            _hours = "0" + _hours;
+        }
+        let _minutes = Math.floor((_studyTime % 3600) / 60);
+        if (_minutes < 10) {
+            _minutes = "0" + _minutes;
+        }
+        let _seconds = Math.floor(_studyTime % 60);
+        if (_seconds < 10) {
+            _seconds = "0" + _seconds;
+        }
+        return _hours + ":" + _minutes + ":" + _seconds;
+    }
 </script>
 
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
         <Portal target={users[user].extensionRegion}>
-            {#if user.toString() === user_id.toString() && play}
+            <!-- {#if user.toString() === user_id.toString() && play}
                 <div class="overhead-timer">
                     <img src={timeSrc} class="time-icon"/>
                     <div class="time-text">{hours}:{minutes}:{seconds}</div>
+                </div>
+            {/if} -->
+
+            {#if userStudyDict[user].isPaused}
+                <div class="overhead-timer">
+                    <img src={timeSrc} class="time-icon"/>
+                    <div>{calcStudyTime(userStudyDict[user].time, userStudyDict[user].startTime)}</div>
                 </div>
             {/if}
         </Portal>
