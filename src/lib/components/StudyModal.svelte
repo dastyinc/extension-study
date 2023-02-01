@@ -6,7 +6,7 @@
     import TodoList from "./TodoList.svelte";
     import Ranking from "./Ranking.svelte";
 
-    export let showStudyModal, play, status, time_id, clicked;
+    export let showStudyModal, play, status, clicked;
     export let todoList, goal;
     export let alterChecked = () => {
     };
