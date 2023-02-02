@@ -259,7 +259,7 @@
 </script>
 
 {#each Object.keys(users) as user}
-  {#if users[user].extensionRegion && !userStudyDict[user].isPaused}
+  {#if users[user].extensionRegion && !userStudyDict[user]?.isPaused}
     <Portal target={users[user].extensionRegion}>
         <div class="overhead-timer">
           <img src={timeSrc} class="time-icon" />
