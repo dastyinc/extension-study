@@ -18,10 +18,10 @@
       nowSeconds = now.getSeconds();
     }, 1000);
 
-    function toHHMMSS(sec_num) {
-        let hours = Math.floor(sec_num / 3600).toString().padStart(2, '0');
-        let minutes = Math.floor((sec_num - (hours * 3600)) / 60).toString().padStart(2, '0');
-        let seconds = (sec_num - (hours * 3600) - (minutes * 60)).toString().padStart(2, '0');
+    function toHHMMSS(time) {
+        let hours = Math.floor(time / 3600).toString().padStart(2, '0');
+        let minutes = Math.floor((time - (hours * 3600)) / 60).toString().padStart(2, '0');
+        let seconds = (time - (hours * 3600) - (minutes * 60)).toString().padStart(2, '0');
 
         return `${hours}:${minutes}:${seconds}`;
     }
