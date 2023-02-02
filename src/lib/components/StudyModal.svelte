@@ -5,8 +5,6 @@
   import Chart from "./Chart.svelte";
   import TodoList from "./TodoList.svelte";
   import Ranking from "./Ranking.svelte";
-  import TimerByUser from "./TimerByUser.svelte";
-
   export let showStudyModal, play, status, clicked, otherTimes;
   export let todoList, goal;
 
@@ -43,15 +41,6 @@
   <div class="name-normal" style="margin-bottom: 1.438rem;">
     Study Dashboard
   </div>
-
-  {#if otherTimes}
-    <div class="timer-list">
-      {#each otherTimes as timer, i}
-        <!-- <div>user id : {timer.user_id}, time : {timer.time}</div> -->
-        <TimerByUser bind:timer />
-      {/each}
-    </div>
-  {/if}
   <div style="display: flex;">
     <div style="margin-right: 1.375rem;">
       <Box
