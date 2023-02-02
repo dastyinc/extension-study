@@ -7,7 +7,7 @@
         nowMinutes,
         nowSeconds;
 
-    $: otherTimes.sort((a, b) => {
+    $: otherTimes?.sort((a, b) => {
         return b.time.toString().localeCompare(a.time.toString());
     })
 
@@ -28,6 +28,7 @@
 </script>
 
 <div class="container --scroll">
+  {#if otherTimes !== undefined}
     {#each otherTimes as _, i}
         <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
             <div style="display: flex;">
@@ -42,6 +43,7 @@
             </div>
         </div>
     {/each}
+  {/if}
 </div>
 
 <style lang="scss">
