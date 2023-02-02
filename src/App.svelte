@@ -261,6 +261,7 @@
 {#each Object.keys(users) as user}
   {#if users[user].extensionRegion && !userStudyDict[user]?.isPaused}
     <Portal target={users[user].extensionRegion}>
+      {#if userStudyDict[user] !== undefined}
         <div class="overhead-timer">
           <img src={timeSrc} class="time-icon" />
           <div>
@@ -270,6 +271,7 @@
             )}
           </div>
         </div>
+      {/if}
     </Portal>
   {/if}
 {/each}
