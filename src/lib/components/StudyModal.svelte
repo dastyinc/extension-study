@@ -97,7 +97,7 @@
         style="width: 18.813rem; height: 15.938rem; margin-top: 1.375rem; padding: 1.25rem"
       >
         <div class="name" style="color: #ffffff;">Ranking</div>
-        <Ranking />
+        <Ranking bind:otherTimes/>
       </Box>
     </div>
   </div>

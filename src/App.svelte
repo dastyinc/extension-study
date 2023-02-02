@@ -10,8 +10,7 @@
 
   const { api, ws, wsStore, throttle } = getContext("utils");
   const { user_id, user_name } = getContext("account");
-  // const channel = getContext("channel");
-  const channel = "07f24980-7d32-4be8-bb7c-4ce2d1680320";
+  const channel = getContext("channel");
 
   let showTodo = false;
   let showStudyModal = false;
@@ -71,27 +70,12 @@
       }
     });
   }
-
   $: sendTodoListUpdate = throttle(() => {
     sendWs?.("TODO_UPDATE");
   });
-
   $: sendTimerUpdate = throttle(() => {
     sendWs?.("TIMER_UPDATE");
   });
-
-  $: if (otherTimes) console.log(otherTimes);
-
-  function updateTimer() {
-    console.log("ss");
-    getTimerByChannel();
-  }
-
-  async function getTimerByChannel() {
-    console.log(channel);
-    otherTimes_list = await api(`/timer/time/byChannel/${channel}`);
-    otherTimes = otherTimes_list.time;
-  }
 
   setInterval(() => {
     let now = new Date();
@@ -99,22 +83,6 @@
     nowMinutes = now.getMinutes();
     nowSeconds = now.getSeconds();
   }, 1000);
-
-  setInterval(() => {
-    Object.keys(users).forEach(
-      (userId) =>
-        async function () {
-          let userStudyObj = await api(`/timer/time/${userId}`);
-          if (userStudyObj.time.length !== 0) {
-            userStudyDict[userId] = {
-              startTime: userStudyObj.time[0].startTime,
-              time: userStudyObj.time[0].time,
-              isPaused: userStudyObj.time[0].isPaused,
-            };
-          }
-        }
-    );
-  }, 300000);
 
   onMount(() => {
     getTodoList();
@@ -197,15 +165,11 @@
   async function getTimer() {
     timeObj = await api(`/timer/time/${user_id}`);
     if (timeObj.time.length !== 0) {
-      if (timeObj.time[0].channel_id != channel) {
-        await api(
-          `/timer/time/channelId/edit`,
-          { time_id, channel_id: channel },
-          "PUT"
-        );
-      }
       time = timeObj.time[0].time;
       time_id = timeObj.time[0].time_id;
+      if (timeObj.time[0].channel_id != channel) {
+        await api(`/timer/time/channelId/edit`, { time_id, channel_id: channel }, "PUT");
+      }
     }
   }
 
@@ -256,6 +220,25 @@
     sendTimerUpdate();
   }
 
+  function updateTimer() {
+    getTimerByChannel();
+  }
+
+  async function getTimerByChannel() {
+    otherTimes_list = await api(`/timer/time/byChannel/${channel}`);
+    otherTimes = otherTimes_list.time;
+  }
+
+  $: {
+    otherTimes?.forEach(otherTime => {
+      userStudyDict[otherTime.user_id] = {
+        startTime : otherTime.startTime,
+        time : otherTime.time,
+        isPaused : otherTime.isPaused
+      }
+    });
+  }
+
   function calcStudyTime(_time, _startTime) {
     let _studyTime =
       _time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - _startTime;
@@ -276,10 +259,8 @@
 </script>
 
 {#each Object.keys(users) as user}
-  {#if users[user].extensionRegion}
-    <Portal target={users[user].extensionRegion}
-      >x
-      {#if !userStudyDict[user].isPaused}
+  {#if users[user].extensionRegion && !userStudyDict[user].isPaused}
+    <Portal target={users[user].extensionRegion}>
         <div class="overhead-timer">
           <img src={timeSrc} class="time-icon" />
           <div>
@@ -289,7 +270,6 @@
             )}
           </div>
         </div>
-      {/if}
     </Portal>
   {/if}
 {/each}

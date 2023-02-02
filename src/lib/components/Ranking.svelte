@@ -1,17 +1,22 @@
 <script lang="ts">
     import Poll from "./Poll.svelte";
 
-    let testRanking = [
-        {user: "hogun", time: 38642},
-        {user: "wagyu", time: 45842},
-        {user: "busutsutbu", time: 42242},
-        {user: "ray", time: 35042},
-        {user: "swishee", time: 31442}
-    ]
+    export let otherTimes;
 
-    $: testRanking.sort((a, b) => {
+    let nowHour,
+        nowMinutes,
+        nowSeconds;
+
+    $: otherTimes.sort((a, b) => {
         return b.time.toString().localeCompare(a.time.toString());
     })
+
+    setInterval(() => {
+      let now = new Date();
+      nowHour = now.getHours();
+      nowMinutes = now.getMinutes();
+      nowSeconds = now.getSeconds();
+    }, 1000);
 
     function toHHMMSS(sec_num) {
         let hours = Math.floor(sec_num / 3600).toString().padStart(2, '0');
@@ -23,17 +28,17 @@
 </script>
 
 <div class="container --scroll">
-    {#each testRanking as value, i}
+    {#each otherTimes as _, i}
         <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
             <div style="display: flex;">
                 <div class="circle">
                     <div class="circle-text">{i + 1}</div>
                 </div>
-                <div class="user">{value.user}</div>
+                <div class="user">{otherTimes[i].user_name}</div>
             </div>
             <div style="display: flex;">
-                <Poll max={testRanking[0].time} value={testRanking[i].time}/>
-                <div class="time">{toHHMMSS(value.time.toString())}</div>
+                <Poll max={otherTimes[0].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[0].startTime} value={otherTimes[i].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[i].startTime}/>
+                <div class="time">{toHHMMSS(otherTimes[i].time.toString())}</div>
             </div>
         </div>
     {/each}
