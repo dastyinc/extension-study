@@ -27,6 +27,7 @@
         nowSeconds,
         studyTime = writable(0);
     let hours, minutes, seconds;
+    let userStudyDict = {};
         
     setContext("studyTime", studyTime);
 
@@ -76,6 +77,19 @@
         nowMinutes = now.getMinutes();
         nowSeconds = now.getSeconds();
     }, 1000);
+
+    setInterval(() => {
+        Object.keys(users).forEach(userId => async function(){
+            let userStudyObj = await api(`/timer/time/${userId}`);
+            if (userStudyObj.time.length !== 0){
+                userStudyDict[userId] = {
+                    startTime : userStudyObj.time[0].startTime,
+                    time : userStudyObj.time[0].time,
+                    isPaused : userStudyObj.time[0].isPaused,
+                };
+            }
+        });
+    }, 300000);
 
     onMount(() => {
         getTodoList();
@@ -201,21 +215,6 @@
         await getTimer();
     }
 
-    let userStudyDict = {};
-
-    $:{
-        Object.keys(users).forEach(userId => async function(){
-            let userStudyObj = await api(`/timer/time/${userId}`);
-            if (userStudyObj.time.length !== 0){
-                userStudyDict[userId] = {
-                    startTime : userStudyObj.time[0].startTime,
-                    time : userStudyObj.time[0].time,
-                    isPaused : userStudyObj.time[0].isPaused,
-                };
-            }
-        });
-    }
-
     function calcStudyTime(_time, _startTime){
         let _studyTime = _time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - _startTime;
         let _hours = Math.floor(_studyTime / 3600);
@@ -236,15 +235,8 @@
 
 {#each Object.keys(users) as user}
     {#if users[user].extensionRegion}
-        <Portal target={users[user].extensionRegion}>
-            <!-- {#if user.toString() === user_id.toString() && play}
-                <div class="overhead-timer">
-                    <img src={timeSrc} class="time-icon"/>
-                    <div class="time-text">{hours}:{minutes}:{seconds}</div>
-                </div>
-            {/if} -->
-
-            {#if userStudyDict[user].isPaused}
+        <Portal target={users[user].extensionRegion}>x
+            {#if !userStudyDict[user].isPaused}
                 <div class="overhead-timer">
                     <img src={timeSrc} class="time-icon"/>
                     <div>{calcStudyTime(userStudyDict[user].time, userStudyDict[user].startTime)}</div>
