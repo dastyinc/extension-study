@@ -27,7 +27,7 @@
     }
 </script>
 
-<div class="container --scroll">
+<div class="container">
   {#if otherTimes !== undefined}
     {#key nowSeconds}
       {#each otherTimes as _, i}
@@ -52,11 +52,10 @@
   .container {
     margin-top: 0.938rem;
     max-height: 13.4rem;
-    overflow-y: auto;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
   }
 
   .circle {
