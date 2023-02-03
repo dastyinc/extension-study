@@ -7,9 +7,10 @@
         nowMinutes,
         nowSeconds;
 
-    $: otherTimes?.sort((a, b) => {
-        return b.time.toString().localeCompare(a.time.toString());
-    })
+    $: {
+      otherTimes?.sort((a, b) => a.time - b.time);
+      console.log(otherTimes);
+    }
 
     setInterval(() => {
       let now = new Date();
@@ -31,18 +32,18 @@
   {#if otherTimes !== undefined}
     {#key nowSeconds}
       {#each otherTimes as _, i}
-          <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
-              <div style="display: flex;">
-                  <div class="circle">
-                      <div class="circle-text">{i + 1}</div>
-                  </div>
-                  <div class="user">{otherTimes[i].user_name}</div>
-              </div>
-              <div style="display: flex;">
-                  <Poll max={otherTimes[0].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[0].startTime} value={otherTimes[i].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[i].startTime}/>
-                  <div class="time">{toHHMMSS(otherTimes[i].time.toString())}</div>
-              </div>
+        <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
+          <div style="display: flex;">
+            <div class="circle">
+              <div class="circle-text">{i + 1}</div>
+            </div>
+            <div class="user">{otherTimes[i].user_name}</div>
           </div>
+          <div style="display: flex;">
+            <Poll max={otherTimes[0].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[0].startTime} value={otherTimes[i].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[i].startTime}/>
+            <div class="time">{toHHMMSS(otherTimes[i].time.toString())}</div>
+          </div>
+        </div>
       {/each}
     {/key}
   {/if}
