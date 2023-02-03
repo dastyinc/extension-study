@@ -8,7 +8,7 @@
         nowSeconds;
 
     $: {
-      otherTimes?.sort((a, b) => a.time - b.time);
+      otherTimes?.sort((a, b) => b.time - a.time);
       console.log(otherTimes);
     }
 
