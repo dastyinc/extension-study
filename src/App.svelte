@@ -261,17 +261,14 @@
 {#each Object.keys(users) as user}
   {#if users[user].extensionRegion && !userStudyDict[user]?.isPaused}
     <Portal target={users[user].extensionRegion}>
-      {#if userStudyDict[user] !== undefined}
-        <div class="overhead-timer">
-          <img src={timeSrc} class="time-icon" />
-          <div>
-            {calcStudyTime(
-              userStudyDict[user].time,
-              userStudyDict[user].startTime
-            )}
-          </div>
+      <div class="overhead-timer">
+        <img src={timeSrc} class="time-icon" />
+        <div class="time-text">
+          {#key nowSeconds}
+            {calcStudyTime(userStudyDict[user]?.time, userStudyDict[user]?.startTime)}
+          {/key}
         </div>
-      {/if}
+      </div>
     </Portal>
   {/if}
 {/each}
