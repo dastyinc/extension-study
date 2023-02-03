@@ -38,8 +38,10 @@
                 <div class="user">{otherTimes[i].user_name}</div>
             </div>
             <div style="display: flex;">
+              {#key nowSeconds}
                 <Poll max={otherTimes[0].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[0].startTime} value={otherTimes[i].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[i].startTime}/>
                 <div class="time">{toHHMMSS(otherTimes[i].time.toString())}</div>
+              {/key}
             </div>
         </div>
     {/each}
@@ -48,7 +50,8 @@
 
 <style lang="scss">
   .container {
-    max-height: 15rem;
+    margin-top: 0.938rem;
+    max-height: 13.4rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
