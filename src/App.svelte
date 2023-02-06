@@ -152,6 +152,22 @@
     goal = "";
   }
 
+  function editTodo(_goal, _id){
+            console.log("test")
+    deleteTodo(_id);
+    api("/todoList/todo", {
+      user_id,
+      user_name,
+      channel_id: channel,
+      goal: _goal,
+      completed: false,
+    })
+      .then(() => {})
+      .catch(({ error }) => {});
+    getTodoList();
+    sendTodoListUpdate();
+  }
+
   function onKeyPress(e) {
     if (e.charCode === 13 && goal !== "") {
       sendTodo();
@@ -282,6 +298,7 @@
   bind:goal
   bind:play
   bind:clicked
+  {editTodo}
   {alterChecked}
   {_alterChecked}
   {deleteTodo}
@@ -297,6 +314,7 @@
   bind:goal
   bind:clicked
   bind:otherTimes
+  {editTodo}
   {alterChecked}
   {_alterChecked}
   {deleteTodo}

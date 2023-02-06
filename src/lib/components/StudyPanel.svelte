@@ -10,6 +10,7 @@
     import {slide} from "svelte/transition";
     import playSrc from "$static/start.svg?url";
     import pauseSrc from "$static/stop.svg?url";
+    import InPlaceEdit from "./InPlaceEdit.svelte";
 
     export let showStudyModal, showTodo, status, _completed, todoList, goal, play, clicked;
     export let alterChecked = () => {
@@ -19,6 +20,8 @@
     export let deleteTodo = () => {
     };
     export let onKeyPress = () => {
+    };
+    export let editTodo = () => {
     };
     
     let studyTime = getContext('studyTime');
@@ -85,11 +88,10 @@
                     {#if !goal.completed}
                         <div class="goal">
                             <img class="img" src={uncheckedSrc} on:click={alterChecked(goal)}/>
-                            <div on:click={() => status = goal.goal} class="text"
-                                 style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">
-                                {goal.goal}
+                            <div on:click={() => status = goal.goal}
+                                 style="width: 100%; font-size: 1rem;">
+                                <InPlaceEdit bind:text={goal.goal} bind:id={goal.todo_id} {editTodo} {deleteTodo}/>
                             </div>
-                            <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
@@ -98,14 +100,14 @@
                     {#if goal.completed}
                         <div class="goal">
                             <img class="img" src={checkedSrc} on:click={_alterChecked(goal)}/>
-                            <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
+                            <div style="width: 100%; font-size: 1rem;">{goal.goal}</div>
                             <img class="close img" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
                         </div>
                     {/if}
                 {/each}
                 <div style="display: flex; margin-top: 0.625rem">
                     <img src={plusSrc}/>
-                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem;" placeholder="새로운 목표를 세워보세요!"/>
+                    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem; width: 86%" placeholder="새로운 목표를 세워보세요!"/>
                 </div>
             </Box>
         </div>
@@ -178,14 +180,6 @@
     margin-top: 0.625rem;
     justify-content: space-between;
     align-items: flex-start;
-  }
-
-  .goal > .close {
-    opacity: 0;
-  }
-
-  .goal:hover > .close {
-    opacity: 1;
   }
 
   .img:hover {

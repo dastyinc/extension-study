@@ -13,6 +13,7 @@
   export let deleteTodo = () => {};
   export let onKeyPress = () => {};
   export let resetTimer = () => {};
+  export let editTodo = () => {};
 
   $: if (otherTimes) console.log(otherTimes);
 
@@ -74,10 +75,11 @@
           bind:todoList
           bind:goal
           bind:status
-          AlterChecked={alterChecked}
-          _AlterChecked={_alterChecked}
-          DeleteTodo={deleteTodo}
-          OnKeyPress={onKeyPress}
+          {editTodo}
+          {deleteTodo}
+          {alterChecked}
+          {_alterChecked}
+          {onKeyPress}
         />
       </Box>
 
