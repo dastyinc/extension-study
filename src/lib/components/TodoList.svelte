@@ -3,31 +3,39 @@
     import uncheckedSrc from "$static/unchecked.svg?url";
     import closeSrc from "$static/close.svg?url";
     import plusSrc from "$static/plus.svg?url";
+    import InPlaceEdit from "./InPlaceEdit.svelte";
 
     export let todoList = [], goal, status;
-    export let AlterChecked;
-    export let _AlterChecked;
-    export let DeleteTodo;
-    export let OnKeyPress;
+    export let editTodo = () => {
+    };
+    export let alterChecked = () => {
+    };;
+    export let _alterChecked = () => {
+    };;
+    export let deleteTodo = () => {
+    };;
+    export let onKeyPress = () => {
+    };;
 </script>
 
 <div class="container --scroll">
     {#each todoList as goal}
         {#if !goal.completed}
             <div class="goal">
-                <img src={uncheckedSrc} on:click={AlterChecked(goal)}/>
+                <img src={uncheckedSrc} on:click={alterChecked(goal)}/>
                 <div on:click={() => status = goal.goal} class="text"
-                     style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                <img class="close" src={closeSrc} on:click|stopPropagation={DeleteTodo(goal.todo_id)}/>
+                     style="margin-left: 0.225rem; width: 100%; font-size: 1rem;">
+                     <InPlaceEdit bind:text={goal.goal} bind:id={goal.todo_id} {editTodo} {deleteTodo}/>
+                </div>
             </div>
         {/if}
     {/each}
     {#each todoList as goal}
         {#if goal.completed}
             <div class="goal">
-                <img src={checkedSrc} on:click={_AlterChecked(goal)}/>
+                <img src={checkedSrc} on:click={_alterChecked(goal)}/>
                 <div style="margin-left: 0.625rem; width: 75%; font-size: 1rem;">{goal.goal}</div>
-                <img class="close" src={closeSrc} on:click|stopPropagation={DeleteTodo(goal.todo_id)}/>
+                <img class="close" src={closeSrc} on:click|stopPropagation={deleteTodo(goal.todo_id)}/>
             </div>
         {/if}
     {/each}
@@ -35,7 +43,7 @@
 
 <div style="display: flex; margin-top: 0.625rem">
     <img src={plusSrc}/>
-    <input bind:value={goal} on:keypress={OnKeyPress} style="margin-left: 0.625rem; width: 100%"
+    <input bind:value={goal} on:keypress={onKeyPress} style="margin-left: 0.625rem; width: 100%"
            placeholder="새로운 목표를 세워보세요!"/>
 </div>
 

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+    <path data-name="사각형 59" style="fill:none" d="M0 0h12v12H0z"/>
+    <path data-name="패스 54" d="M42.722 44.648h-2.309a.413.413 0 0 1-.413-.413v-2.31a.408.408 0 0 1 .119-.289l6.2-6.2a.413.413 0 0 1 .589 0l2.3 2.3a.413.413 0 0 1 0 .589l-6.2 6.2a.408.408 0 0 1-.286.123z" transform="translate(-38.719 -34.275)" style="stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:.8px;fill:none"/>
+    <path data-name="선 40" transform="translate(6 2.787)" style="stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:.8px;fill:none" d="m0 0 2.678 2.678"/>
+</svg>

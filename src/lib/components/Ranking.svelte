@@ -8,8 +8,7 @@
         nowSeconds;
 
     $: {
-      otherTimes?.sort((a, b) => b.time - a.time);
-      console.log(otherTimes);
+      otherTimes?.sort((a, b) => (b.time-b.startTime) - (a.time-a.startTime));
     }
 
     setInterval(() => {
@@ -19,33 +18,46 @@
       nowSeconds = now.getSeconds();
     }, 1000);
 
-    function toHHMMSS(time) {
-        let hours = Math.floor(time / 3600).toString().padStart(2, '0');
-        let minutes = Math.floor((time - (hours * 3600)) / 60).toString().padStart(2, '0');
-        let seconds = (time - (hours * 3600) - (minutes * 60)).toString().padStart(2, '0');
-
-        return `${hours}:${minutes}:${seconds}`;
+    function calcStudyTime(_time, _startTime) {
+      let _studyTime = _time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - _startTime;
+      let _hours = Math.floor(_studyTime / 3600);
+      if (_hours < 10) {
+        _hours = "0" + _hours;
+      }
+      let _minutes = Math.floor((_studyTime % 3600) / 60);
+      if (_minutes < 10) {
+        _minutes = "0" + _minutes;
+      }
+      let _seconds = Math.floor(_studyTime % 60);
+      if (_seconds < 10) {
+        _seconds = "0" + _seconds;
+      }
+      return (_studyTime > 0 ? _hours + ":" + _minutes + ":" + _seconds : "00:00:00")
     }
 </script>
 
 <div class="container">
   {#if otherTimes !== undefined}
-    {#key nowSeconds}
-      {#each otherTimes as _, i}
-        <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
-          <div style="display: flex;">
-            <div class="circle">
-              <div class="circle-text">{i + 1}</div>
-            </div>
-            <div class="user">{otherTimes[i].user_name}</div>
+    {#each otherTimes as _, i}
+      <div style="display: flex; margin-bottom: 0.625rem; justify-content: space-between; width: 100%;">
+        <div style="display: flex;">
+          <div class="circle">
+            <div class="circle-text">{i + 1}</div>
           </div>
-          <div style="display: flex;">
-            <!-- <Poll max={otherTimes[0].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[0].startTime} value={otherTimes[i].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[i].startTime}/> -->
-            <div class="time">{toHHMMSS(otherTimes[i].time.toString())}</div>
-          </div>
+          <div class="user">{otherTimes[i].user_name}</div>
         </div>
-      {/each}
-    {/key}
+        <div style="display: flex;">
+          <Poll max={otherTimes[0].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[0].startTime} value={otherTimes[i].time+nowHour*3600+nowMinutes*60+nowSeconds-otherTimes[i].startTime}/>
+          {#if otherTimes[i].isPaused}
+            <div class="time">{calcStudyTime(otherTimes[i].time, otherTimes[i].startTime)}</div>
+          {:else}
+            {#key nowSeconds}
+              <div class="time">{calcStudyTime(otherTimes[i].time, otherTimes[i].startTime)}</div>
+            {/key}
+          {/if}
+        </div>
+      </div>
+    {/each}
   {/if}
 </div>
 
