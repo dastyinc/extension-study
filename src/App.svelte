@@ -78,7 +78,6 @@
   });
   $:{
     if(isNaN($studyTime)){
-      getTimer();
       $studyTime = 0;
     }
   }
@@ -189,7 +188,6 @@
     if (timeObj.time.length !== 0) {
       time = timeObj.time[0].time;
       time_id = timeObj.time[0].time_id;
-      // $studyTime = time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - timeObj.time[0].startTime;
       if (timeObj.time[0].channel_id != channel) {
         await api(`/timer/time/channelId/edit`, { time_id, channel_id: channel }, "PUT");
       }
@@ -282,7 +280,7 @@
 </script>
 
 {#each Object.keys(users) as user}
-  {#if users[user].extensionRegion && !userStudyDict[user]?.isPaused}
+  {#if users[user].extensionRegion && !userStudyDict[user]?.isPaused && !isNaN(userStudyDict[user]?.time) && !isNaN(userStudyDict[user]?.startTime)}
     <Portal target={users[user].extensionRegion}>
       <div class="overhead-timer">
         <img src={timeSrc} class="time-icon" />
