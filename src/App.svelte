@@ -76,6 +76,12 @@
   $: sendTimerUpdate = throttle(() => {
     sendWs?.("TIMER_UPDATE");
   });
+  $:{
+    if(isNaN($studyTime)){
+      getTimer();
+      $studyTime = 0;
+    }
+  }
 
   setInterval(() => {
     let now = new Date();
@@ -183,6 +189,7 @@
     if (timeObj.time.length !== 0) {
       time = timeObj.time[0].time;
       time_id = timeObj.time[0].time_id;
+      // $studyTime = time + nowHour * 3600 + nowMinutes * 60 + nowSeconds - timeObj.time[0].startTime;
       if (timeObj.time[0].channel_id != channel) {
         await api(`/timer/time/channelId/edit`, { time_id, channel_id: channel }, "PUT");
       }
